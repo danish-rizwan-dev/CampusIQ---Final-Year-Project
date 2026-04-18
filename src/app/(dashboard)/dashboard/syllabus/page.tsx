@@ -4,9 +4,107 @@ import { useState, useEffect } from 'react';
 import { 
   FileText, Link as LinkIcon, Book, Sparkles, 
   Video, Plus, CheckCircle2, AlertTriangle, Loader2,
-  Trash2, Edit3, Save, X, ChevronRight
+  Trash2, Edit3, Save, X, ChevronRight, GraduationCap, ExternalLink, Library
 } from 'lucide-react';
 import { toast } from 'sonner';
+
+function ExpandedStudyView({ topic }: { topic: any }) {
+  const [activeTab, setActiveTab] = useState<'docs' | 'links' | 'practice'>('docs');
+
+  return (
+    <div className="study-view fade-in" style={{ 
+        marginTop: '1.5rem', 
+        borderTop: '1px solid var(--border)', 
+        paddingTop: '1.5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.5rem'
+    }}>
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-secondary)', padding: '4px', borderRadius: '12px', width: 'fit-content' }}>
+        {[
+          { id: 'docs', label: 'Documentation', icon: <Library size={14} /> },
+          { id: 'links', label: 'Resources', icon: <LinkIcon size={14} /> },
+          { id: 'practice', label: 'Practice Arena', icon: <GraduationCap size={14} /> }
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              border: 'none',
+              fontSize: '0.75rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: activeTab === tab.id ? 'var(--accent)' : 'transparent',
+              color: activeTab === tab.id ? 'white' : 'var(--text-secondary)',
+              transition: '0.2s'
+            }}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="tab-content" style={{ minHeight: '200px' }}>
+        {activeTab === 'docs' && (
+          <div className="fade-in">
+            <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--accent)' }}>Technical Deep-Dive</h4>
+            <div 
+                className="docs-content"
+                style={{ fontSize: '0.9rem', lineHeight: '1.7', color: 'var(--text-primary)', opacity: 0.9 }}
+                dangerouslySetInnerHTML={{ __html: topic.documentation || '<p>No detailed documentation available for this topic yet. Try regenerating or editing the card.</p>' }} 
+            />
+          </div>
+        )}
+
+        {activeTab === 'links' && (
+          <div className="fade-in">
+             <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--accent)' }}>Study Resources & Lectures</h4>
+             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+                <a href={topic.youtubeSearchUrl} target="_blank" rel="noopener noreferrer" className="glass-card" style={{ padding: '1rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid var(--danger)' }}>
+                    <Video size={20} color="var(--danger)" />
+                    <div>
+                        <p style={{ margin: 0, fontWeight: '700', fontSize: '0.8rem', color: 'var(--text-primary)' }}>Video Lectures</p>
+                        <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Quality tutorials</p>
+                    </div>
+                </a>
+                {topic.resources?.map((res: string, i: number) => (
+                    <div key={i} className="glass-card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <ExternalLink size={20} color="var(--accent)" />
+                        <p style={{ margin: 0, fontWeight: '600', fontSize: '0.8rem', color: 'var(--text-primary)' }}>{res}</p>
+                    </div>
+                ))}
+             </div>
+          </div>
+        )}
+
+        {activeTab === 'practice' && (
+          <div className="fade-in">
+            <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--accent)' }}>Sample & Previous Year Questions</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                {topic.practiceQuestions?.length > 0 ? topic.practiceQuestions.map((pq: any, i: number) => (
+                    <div key={i} className="glass-card" style={{ padding: '1rem', display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                        <div style={{ background: 'var(--accent-glow)', padding: '6px', borderRadius: '8px', color: 'var(--accent)', fontSize: '0.7rem', fontWeight: '800' }}>Q{i+1}</div>
+                        <div>
+                            <p style={{ margin: '0 0 0.4rem 0', fontSize: '0.9rem', fontWeight: '500' }}>{pq.question}</p>
+                            <span style={{ fontSize: '0.65rem', padding: '2px 8px', background: 'var(--bg-secondary)', borderRadius: '4px', border: '1px solid var(--border)', textTransform: 'uppercase' }}>{pq.type}</span>
+                        </div>
+                    </div>
+                )) : (
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>No practice questions identified yet.</p>
+                )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function SyllabusAnalyzer() {
   const [syllabusText, setSyllabusText] = useState('');
@@ -16,6 +114,7 @@ export default function SyllabusAnalyzer() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<any>(null);
   const [showInput, setShowInput] = useState(true);
+  const [expandedTopicId, setExpandedTopicId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTopics();
@@ -56,7 +155,9 @@ export default function SyllabusAnalyzer() {
             difficulty: topic.difficulty,
             subtopics: topic.subtopics,
             resources: topic.resources,
-            youtubeSearchUrl: topic.youtubeSearchUrl
+            youtubeSearchUrl: topic.youtubeSearchUrl,
+            documentation: topic.documentation,
+            practiceQuestions: topic.practiceQuestions
           })
         });
       }
@@ -224,30 +325,31 @@ export default function SyllabusAnalyzer() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', margin: 0, fontSize: '0.9rem' }}><Book size={16} color="var(--accent)" /> Concept Mastery</h4>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                      {topic.subtopics.map((sub: string, i: number) => (
+                      {topic.subtopics.slice(0, 4).map((sub: string, i: number) => (
                         <span key={i} style={{ background: 'var(--bg-secondary)', padding: '0.25rem 0.6rem', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid var(--border)' }}>
                           {sub}
                         </span>
                       ))}
+                      {topic.subtopics.length > 4 && <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>+{topic.subtopics.length - 4} more</span>}
                     </div>
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', margin: 0, fontSize: '0.9rem' }}><LinkIcon size={16} color="var(--accent)" /> Learning Path</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      {topic.resources?.map((res: string, i: number) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                           <CheckCircle2 size={12} color="var(--success)" /> {res}
-                        </div>
-                      ))}
-                      {topic.youtubeSearchUrl && (
-                        <a href={topic.youtubeSearchUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ marginTop: '0.25rem', borderRadius: '10px', color: 'var(--danger)', fontSize: '0.75rem', padding: '0.4rem', justifyContent: 'center' }}>
-                          <Video size={14} /> View Lectures
-                        </a>
-                      )}
+                       <button 
+                        onClick={() => setExpandedTopicId(expandedTopicId === topic.id ? null : topic.id)}
+                        className="btn-primary" 
+                        style={{ padding: '0.5rem', fontSize: '0.75rem', borderRadius: '10px', gap: '0.5rem' }}
+                      >
+                        {expandedTopicId === topic.id ? 'Close Study View' : 'Start Deep Dive'}
+                        <ChevronRight size={14} style={{ transform: expandedTopicId === topic.id ? 'rotate(90deg)' : 'none', transition: '0.3s' }} />
+                      </button>
                     </div>
                   </div>
                 </div>
+
+                {expandedTopicId === topic.id && <ExpandedStudyView topic={topic} />}
               </>
             )}
           </div>

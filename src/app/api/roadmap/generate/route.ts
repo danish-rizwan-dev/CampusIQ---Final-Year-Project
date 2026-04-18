@@ -10,11 +10,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { targetCareer, skillLevel, availableHours, overwrite } = await req.json();
+    const { targetCourse, durationYears, targetCareer, skillLevel, availableHours, overwrite } = await req.json();
 
-    if (!targetCareer || !skillLevel || !availableHours) {
+    if (!targetCareer || !skillLevel || !availableHours || !targetCourse || !durationYears) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
+
+    const roadmapTemplate = await generateInitialRoadmap(targetCareer, skillLevel, Number(availableHours));
+
+    const totalSemesters = Number(durationYears) * 2;
 
     // Get the current user
     const user = await prisma.user.findUnique({ where: { clerkId } });
@@ -28,19 +32,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Roadmap already exists' }, { status: 400 });
     }
 
-    if (overwrite) {
-      // Delete existing roadmaps to regenerate
-      await prisma.semesterRoadmap.deleteMany({
-        where: { userId: user.id }
-      });
-    }
+    // Create roadmap + update careerProfile in an ATOMIC transaction
+    const [roadmap] = await prisma.$transaction(async (tx) => {
+      if (overwrite) {
+        // Delete existing roadmaps to regenerate
+        await tx.semesterRoadmap.deleteMany({
+          where: { userId: user.id }
+        });
+      } else {
+        // Double check for existing roadmap inside transaction
+        const existing = await tx.semesterRoadmap.findFirst({
+          where: { userId: user.id, semesterNumber: 1 }
+        });
+        if (existing) throw new Error('Roadmap already exists');
+      }
 
-    // Generate with AI
-    const roadmapTemplate = await generateInitialRoadmap(targetCareer, skillLevel, availableHours);
-
-    // Create roadmap + update careerProfile
-    const [roadmap] = await prisma.$transaction([
-      prisma.semesterRoadmap.create({
+      const created = await tx.semesterRoadmap.create({
         data: {
           userId: user.id,
           semesterNumber: 1,
@@ -52,17 +59,26 @@ export async function POST(req: Request) {
           aiSuggestions: roadmapTemplate.aiSuggestions,
           environmentSetup: roadmapTemplate.environmentSetup,
         }
-      }),
-      prisma.user.update({
+      });
+
+      await tx.user.update({
         where: { id: user.id },
-        data: { profileCompleted: true }
-      }),
-      prisma.careerProfile.upsert({
+        data: { 
+          profileCompleted: true,
+          targetCourse,
+          durationYears: Number(durationYears),
+          totalSemesters
+        }
+      });
+
+      await tx.careerProfile.upsert({
         where: { userId: user.id },
         update: { selectedCareer: targetCareer },
         create: { userId: user.id, selectedCareer: targetCareer, interests: [], skills: [], personalityTraits: [] }
-      })
-    ]);
+      });
+
+      return [created];
+    });
 
     return NextResponse.json({ roadmap });
   } catch (error) {

@@ -16,10 +16,12 @@ export default function CareerAssessmentPage() {
   const [selectedCareer, setSelectedCareer] = useState<any | null>(null);
 
   const [formData, setFormData] = useState({
+    targetCourse: '',
+    durationYears: 3,
     skills: '',
     interests: '',
     subjects: '',
-    salaryExpectation: 'High Income',
+    salaryExpectation: 'Above Average',
     locationPreference: 'India',
     workEnvironment: 'Hybrid',
     interestsDetailed: '',
@@ -37,7 +39,14 @@ export default function CareerAssessmentPage() {
       const data = await res.json();
       if (data.user?.careerProfile?.fullAssessmentResult) {
         setResults(data.user.careerProfile.fullAssessmentResult.recommendations);
-        setStep(4);
+        setStep(5); // Show results
+      }
+      if (data.user?.targetCourse) {
+        setFormData(prev => ({ 
+            ...prev, 
+            targetCourse: data.user.targetCourse,
+            durationYears: data.user.durationYears || 3
+        }));
       }
     } catch (e) {
       console.error(e);
@@ -59,7 +68,7 @@ export default function CareerAssessmentPage() {
       const data = await res.json();
       if (data.recommendations) {
         setResults(data.recommendations);
-        setStep(4); // Results step
+        setStep(5); // Results step
       }
     } catch (e) {
       console.error(e);
@@ -80,6 +89,8 @@ export default function CareerAssessmentPage() {
     return (
       <CareerResultDetail 
         career={selectedCareer} 
+        targetCourse={formData.targetCourse}
+        durationYears={formData.durationYears}
         onBack={() => setSelectedCareer(null)} 
       />
     );
@@ -90,31 +101,48 @@ export default function CareerAssessmentPage() {
       case 1:
         return (
           <div className="fade-in">
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>Foundations</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Let's start with your current strengths and academic background.</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Award size={24} color="var(--accent)" /> Academic Origin
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Tell us about your current educational journey to better align your career paths.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <div>
-                <label className="input-label">Core Skills</label>
-                <textarea 
-                  className="input-field" 
-                  style={{ minHeight: '100px', paddingTop: '12px' }}
-                  placeholder="e.g. JavaScript, Public Speaking, Graphic Design, Mathematics..."
-                  value={formData.skills}
-                  onChange={e => setFormData({...formData, skills: e.target.value})}
-                />
-              </div>
-              <div>
-                <label className="input-label">Favorite Subjects</label>
+                <label className="input-label">Academic Course / Degree</label>
                 <input 
                   type="text" 
                   className="input-field" 
-                  placeholder="e.g. Physics, Economics, Computer Science..."
-                  value={formData.subjects}
-                  onChange={e => setFormData({...formData, subjects: e.target.value})}
+                  required
+                  placeholder="e.g. BCA, B.Tech Computer Science, B.Sc IT"
+                  value={formData.targetCourse}
+                  onChange={e => setFormData({...formData, targetCourse: e.target.value})}
                 />
               </div>
-              <button onClick={handleNext} className="btn-primary" style={{ padding: '1rem', marginTop: '1rem' }}>
-                Continue to Interests <ChevronRight size={18} />
+              <div>
+                <label className="input-label">Degree Duration</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))', gap: '8px' }}>
+                  {[1, 2, 3, 4, 5].map(y => (
+                    <button 
+                      key={y}
+                      type="button"
+                      onClick={() => setFormData({...formData, durationYears: y})}
+                      className={formData.durationYears === y ? 'btn-primary' : 'btn-secondary'}
+                      style={{ padding: '0.8rem 0', fontSize: '0.9rem' }}
+                    >
+                      {y}Y
+                    </button>
+                  ))}
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.75rem', textAlign: 'center' }}>
+                    This will determine the length of your academic roadmap.
+                </p>
+              </div>
+              <button 
+                onClick={handleNext} 
+                disabled={!formData.targetCourse}
+                className="btn-primary" 
+                style={{ padding: '1rem', marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              >
+                Let's Assess Skills <ChevronRight size={18} />
               </button>
             </div>
           </div>
@@ -122,32 +150,35 @@ export default function CareerAssessmentPage() {
       case 2:
         return (
           <div className="fade-in">
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>Deep Interests</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Tell us what truly excites you and how you like to work.</p>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Target size={24} color="var(--accent)" /> Skills & Subjects
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>We'll use your current strengths to find high-compatibility fields.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
-                <label className="input-label">What do you enjoy doing in your free time?</label>
+                <label className="input-label">Core Technical/Soft Skills</label>
                 <textarea 
                   className="input-field" 
                   style={{ minHeight: '100px', paddingTop: '12px' }}
-                  placeholder="e.g. Solving puzzles, building apps, volunteering, writing stories..."
-                  value={formData.interestsDetailed}
-                  onChange={e => setFormData({...formData, interestsDetailed: e.target.value})}
+                  placeholder="e.g. JavaScript, Python, UI Design, Project Management..."
+                  value={formData.skills}
+                  onChange={e => setFormData({...formData, skills: e.target.value})}
                 />
               </div>
               <div>
-                <label className="input-label">Project Preference</label>
-                <select className="input-field" value={formData.projectPreference} onChange={e => setFormData({...formData, projectPreference: e.target.value})}>
-                  <option>Technical/Analytical (Data, Code, Logic)</option>
-                  <option>Creative/Design (Art, UI/UX, Storytelling)</option>
-                  <option>Social/Leadership (Management, Teaching, HR)</option>
-                  <option>Hands-on/Physical (Engineering, Lab work)</option>
-                </select>
+                <label className="input-label">Favorite Academic Subjects</label>
+                <input 
+                  type="text" 
+                  className="input-field" 
+                  placeholder="e.g. Data Structures, Web Development, Economics..."
+                  value={formData.subjects}
+                  onChange={e => setFormData({...formData, subjects: e.target.value})}
+                />
               </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                 <button onClick={handlePrev} className="btn-secondary" style={{ flex: 1, padding: '1rem' }}>Back</button>
-                <button onClick={handleNext} className="btn-primary" style={{ flex: 2, padding: '1rem' }}>
-                  Lifestyle Preferences <ChevronRight size={18} />
+                <button onClick={handleNext} className="btn-primary" style={{ flex: 2, padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                    Deeper Interests <ChevronRight size={18} />
                 </button>
               </div>
             </div>
@@ -156,13 +187,65 @@ export default function CareerAssessmentPage() {
       case 3:
         return (
           <div className="fade-in">
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>Lifestyle & Goals</h2>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Sparkles size={24} color="var(--accent)" /> Passions & Logic
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Your passions drive your longevity in a career path.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div>
+                <label className="input-label">What excites you about tech/work?</label>
+                <textarea 
+                  className="input-field" 
+                  style={{ minHeight: '120px', paddingTop: '12px' }}
+                  placeholder="e.g. I love building things that people use daily, solving complex logic puzzles..."
+                  value={formData.interestsDetailed}
+                  onChange={e => setFormData({...formData, interestsDetailed: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="input-label">Natural Inclination</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
+                  {[
+                    { val: 'Technical/Analytical', icon: <TrendingUp size={16}/>, desc: 'Data, Code, Logic' },
+                    { val: 'Creative/Design', icon: <Globe size={16}/>, desc: 'Art, UI/UX, Story' },
+                    { val: 'Social/Leadership', icon: <Briefcase size={16}/>, desc: 'Management, HR, Sales' }
+                  ].map(item => (
+                    <button 
+                      key={item.val} 
+                      onClick={() => setFormData({...formData, projectPreference: item.val})}
+                      className={formData.projectPreference.includes(item.val) ? 'btn-primary' : 'btn-secondary'}
+                      style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left' }}
+                    >
+                      {item.icon}
+                      <div>
+                        <div style={{ fontWeight: '700', fontSize: '0.9rem' }}>{item.val}</div>
+                        <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{item.desc}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <button onClick={handlePrev} className="btn-secondary" style={{ flex: 1, padding: '1rem' }}>Back</button>
+                <button onClick={handleNext} className="btn-primary" style={{ flex: 2, padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  Lifestyle Goals <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="fade-in">
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <DollarSign size={24} color="var(--accent)" /> Future Lifestyle
+            </h2>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Finalizing your career environment and financial expectations.</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div className="responsive-grid-2" style={{ gap: '1.5rem' }}>
                 <div>
                   <label className="input-label">Salary Goal</label>
-                  <select className="input-field" value={formData.salaryExpectation} onChange={e => setFormData({...formData, salaryExpectation: e.target.value})}>
+                  <select className="input-field text-center" value={formData.salaryExpectation} onChange={e => setFormData({...formData, salaryExpectation: e.target.value})}>
                     <option>Standard</option>
                     <option>Above Average</option>
                     <option>High Income</option>
@@ -170,10 +253,10 @@ export default function CareerAssessmentPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="input-label">Location</label>
-                  <select className="input-field" value={formData.locationPreference} onChange={e => setFormData({...formData, locationPreference: e.target.value})}>
+                  <label className="input-label">Geography</label>
+                  <select className="input-field text-center" value={formData.locationPreference} onChange={e => setFormData({...formData, locationPreference: e.target.value})}>
                     <option>India</option>
-                    <option>Abroad</option>
+                    <option>Abroad / US / EU</option>
                     <option>Global (Hybrid)</option>
                   </select>
                 </div>
@@ -184,6 +267,7 @@ export default function CareerAssessmentPage() {
                   {['Remote', 'Office', 'Hybrid'].map(m => (
                     <button 
                       key={m} 
+                      type="button"
                       onClick={() => setFormData({...formData, workEnvironment: m})}
                       className={formData.workEnvironment === m ? 'btn-primary' : 'btn-secondary'}
                       style={{ padding: '0.8rem', fontSize: '0.85rem' }}
@@ -193,61 +277,63 @@ export default function CareerAssessmentPage() {
                   ))}
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
                 <button onClick={handlePrev} className="btn-secondary" style={{ flex: 1, padding: '1rem' }}>Back</button>
-                <button onClick={handleAnalyze} disabled={loading} className="btn-primary" style={{ flex: 2, padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
+                <button onClick={handleAnalyze} disabled={loading} className="btn-primary" style={{ flex: 2, padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', boxShadow: '0 0 20px var(--accent-glow)' }}>
                   {loading ? (
-                    <><Loader2 size={18} className="spin" /> Generating Assessment...</>
+                    <><Loader2 size={20} className="spin" /> Synchronizing AI...</>
                   ) : (
-                    <><Sparkles size={18} /> Reveal My Future</>
+                    <><Sparkles size={20} /> Reveal My Future Path</>
                   )}
                 </button>
               </div>
             </div>
           </div>
         );
-      case 4:
+      case 5:
         return (
           <div className="fade-in">
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <h1 className="gradient-text" style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Your Recommended Paths</h1>
-              <p style={{ color: 'var(--text-secondary)' }}>We've analyzed your profile. Click a career card for a deep dive into salary, growth, and setup guides.</p>
+              <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 6vw, 2.75rem)', marginBottom: '0.75rem' }}>Your Recommended Paths</h1>
+              <p style={{ color: 'var(--text-secondary)', maxWidth: '700px', margin: '0 auto', fontSize: '1rem' }}>
+                We've analyzed your {formData.targetCourse} background and interests. Select a career to generate your specialized roadmap.
+              </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+            <div className="responsive-grid" style={{ gap: '1.5rem' }}>
               {results?.map((career, idx) => (
-                <div key={idx} className="glass-card fade-in" style={{ padding: '1.5rem', cursor: 'pointer', animationDelay: `${idx * 0.1}s` }} onClick={() => setSelectedCareer(career)}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
-                    <div style={{ width: '50px', height: '50px', background: 'var(--accent-glow)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Briefcase size={24} color="var(--accent)" />
+                <div key={idx} className="glass-card fade-in" style={{ padding: '2rem', cursor: 'pointer', animationDelay: `${idx * 0.15}s`, borderRadius: '28px', border: '1px solid var(--border)', transition: 'transform 0.3s ease' }} onClick={() => setSelectedCareer(career)}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                    <div style={{ width: '56px', height: '56px', background: 'var(--accent-glow)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Briefcase size={28} color="var(--accent)" />
                     </div>
-                    <div style={{ background: 'var(--success)', color: 'white', padding: '0.2rem 0.6rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                    <div style={{ background: 'var(--success)', color: 'white', padding: '0.3rem 0.8rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: '800' }}>
                       {career.confidence}% Match
                     </div>
                   </div>
-                  <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.4rem' }}>{career.title}</h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '1.5rem' }}>{career.title}</h3>
+                  <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '1.75rem', lineHeight: '1.6', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {career.reasoning}
                   </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--accent)', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--accent)', fontSize: '0.9rem', fontWeight: '800', borderTop: '1px solid var(--border)', paddingTop: '1.25rem' }}>
                     <span>Deep Dive Analysis</span>
-                    <ChevronRight size={18} />
+                    <ChevronRight size={20} />
                   </div>
                 </div>
               ))}
             </div>
 
-            <div style={{ marginTop: '4rem', textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: '2rem' }}>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Want to try a different profile or update your skills?</p>
+            <div style={{ marginTop: '5rem', textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: '3rem' }}>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.95rem' }}>Want to try a different profile or academic background?</p>
               <button 
                 onClick={() => {
                   setStep(1);
                   setResults(null);
                 }} 
                 className="btn-secondary" 
-                style={{ padding: '0.8rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                style={{ padding: '1rem 2.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.75rem', borderRadius: '14px' }}
               >
-                <RefreshCw size={18} /> Re-Take Full Assessment
+                <RefreshCw size={20} /> Re-Take Full Assessment
               </button>
             </div>
           </div>
@@ -257,7 +343,7 @@ export default function CareerAssessmentPage() {
 
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto', paddingBottom: '5rem' }}>
-      {step < 4 && (
+      {step < 5 && (
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div style={{ display: 'inline-flex', padding: '1.5rem', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
             <Brain size={48} color="var(--accent)" />
@@ -267,7 +353,7 @@ export default function CareerAssessmentPage() {
           
           {/* Progress Indicator */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>
-            {[1, 2, 3].map(s => (
+            {[1, 2, 3, 4].map(s => (
               <div 
                 key={s} 
                 style={{ 
@@ -281,13 +367,13 @@ export default function CareerAssessmentPage() {
         </div>
       )}
 
-      {step < 4 && (
+      {step < 5 && (
         <div className="glass-card" style={{ maxWidth: '600px', margin: '0 auto', padding: '2.5rem', borderRadius: '32px' }}>
           {renderStep()}
         </div>
       )}
 
-      {step === 4 && renderStep()}
+      {step === 5 && renderStep()}
 
       <style jsx>{`
         .input-label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 600; }

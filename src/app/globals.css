@@ -97,8 +97,16 @@ label {
 }
 
 .glass-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px 0 var(--accent-glow);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 20px var(--accent-glow);
+  border-color: var(--accent);
+}
+
+@media (max-width: 480px) {
+  .glass-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
 }
 
 .bento-card {
@@ -118,6 +126,13 @@ label {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
+@media (max-width: 480px) {
+  .bento-card {
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+}
+
 /* ─── BUTTONS ───────────────────────────────────────────── */
 
 .btn-primary {
@@ -132,13 +147,19 @@ label {
   box-shadow: 0 4px 12px var(--accent-glow);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
 }
 
 .btn-primary:hover {
   filter: brightness(1.1);
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px var(--accent-glow);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-primary:disabled {
@@ -158,6 +179,9 @@ label {
   backdrop-filter: blur(10px);
   transition: background 0.2s ease;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-secondary:hover {
@@ -171,12 +195,20 @@ label {
   padding: 0.75rem 1rem;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--text-primary);
   margin-top: 0.25rem;
   margin-bottom: 1rem;
   font-size: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-field.text-center {
+  text-align: center;
+  text-align-last: center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 .input-field:focus {
@@ -199,10 +231,10 @@ label {
 /* ─── RESPONSIVE GRID UTILITIES ─────────────────────────── */
 
 /* 2-column layout that stacks on mobile */
-.responsive-grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+@media (max-width: 768px) {
+  .responsive-grid-2 {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 3+ column auto-fit layout */

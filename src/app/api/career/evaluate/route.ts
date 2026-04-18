@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview", generationConfig: { responseMimeType: "application/json" } });
 
-    const prompt = `You are a Career Guidance AI. Analyze a student profile and return the top 3 career recommendations with deep insights.
+    const prompt = `You are a Career Guidance AI specialized in the Indian tech market. Analyze a student profile and return the top 3 career recommendations with deep, localized insights.
 Profile:
 - Interests: ${data.interestsDetailed || data.interests}
 - Skills: ${data.skills}
@@ -31,6 +31,7 @@ Profile:
 - Expected Salary: ${data.salaryExpectation}
 - Location Preference: ${data.locationPreference}
 - Work Environment: ${data.workEnvironment} 
+
 Respond strictly in JSON matching this schema:
 {
   "recommendations": [
@@ -40,12 +41,25 @@ Respond strictly in JSON matching this schema:
       "reasoning": "string",
       "skillGap": "string",
       "details": {
-        "summary": "string", // A 2-3 sentence overview of the career and daily life
-        "averageSalary": "string", // e.g. "$100k - $150k" or "₹12L - ₹25L"
-        "topCountries": ["string"], // Best countries for this job
-        "jobVacanciesPerYear": "string", // Estimate of global or regional vacancies
-        "growthPotential": "string", // e.g. "Excellent (15% YoY)"
-        "perks": ["string"] // e.g. "Remote work", "Creative freedom", "High travel"
+        "summary": "string", 
+        "averageSalary": "string", // e.g. "₹12L - ₹25L"
+        "topCountries": ["string"], 
+        "jobVacanciesPerYear": "string", 
+        "growthPotential": "string", 
+        "growthTrajectory": "string", // A 2-sentence outlook for next 5 years in India
+        "perks": ["string"],
+        "whatToStudy": "string", // Detailed guide on subjects, certificates, and focus areas
+        "commonTools": ["string"], // Industry tools (e.g. Docker, Figma, VS Code)
+        "softSkills": ["string"], // Social/Communication skills
+        "careerLadder": [
+          { "role": "string", "years": "string", "salary": "string" }
+        ],
+        "companiesInIndia": [
+          { "name": "string", "type": "string", "salaryRange": "string" }
+        ],
+        "globalMarket": [
+          { "country": "string", "demand": "string", "visaContext": "string" } // e.g. { "country": "Germany", "demand": "High", "visaContext": "Blue Card" }
+        ]
       }
     }
   ]

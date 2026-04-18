@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const user = await prisma.user.findUnique({ where: { clerkId } });
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-    const { subjectName, topicName, difficulty, subtopics, resources, youtubeSearchUrl } = await req.json();
+    const { subjectName, topicName, difficulty, subtopics, resources, youtubeSearchUrl, documentation, practiceQuestions } = await req.json();
 
     if (!subjectName || !topicName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -44,7 +44,9 @@ export async function POST(req: Request) {
         difficulty,
         subtopics,
         resources,
-        youtubeSearchUrl
+        youtubeSearchUrl,
+        documentation,
+        practiceQuestions
       }
     });
 

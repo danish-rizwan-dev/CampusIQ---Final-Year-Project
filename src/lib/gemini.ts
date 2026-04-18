@@ -21,11 +21,11 @@ export async function generateInitialRoadmap(targetCareer: string, skillLevel: s
 A semester is 6 months (24 weeks). You MUST provide a comprehensive guide for each week.
 
 CRITICAL REQUIREMENT:
-Include a dedicated "environmentSetup" object. This includes:
-1. "tools": List of specific IDEs (e.g., VS Code), GitHub, and industry-standard software for ${targetCareer}.
-2. "why": For each tool, explain exactly WHY it is necessary for this career.
-3. "resources": A list of links for software downloads, official documentation, and curated YouTube setup videos.
-4. "books": At least 2-3 book recommendations specifically for the subjects of this semester or the career path.
+Include a dedicated "environmentSetup" object. This is a step-by-step guide for the student:
+1. "tools": List of specific IDEs (e.g., "Visual Studio Code with Python Extension"), GitHub, and industry-standard software for ${targetCareer}.
+2. "reasons": For each tool, explain exactly HOW to set it up (e.g., "Install VS Code, then add the Prettier & ESLint extensions") and why it's used.
+3. "resources": A list of links for software downloads, official documentation, and curated YouTube setup videos (specifically "How to setup VS Code for ${targetCareer}").
+4. "books": At least 2-3 specific book recommendations (Title & Author) that are essential for the subjects this semester.
 
 Provide relevant internal study material links in the form of YouTube search URLs for specific topics throughout the 24 weeks.
 
@@ -36,7 +36,7 @@ Respond purely in JSON format matching this schema:
   "projects": [{"name": "string", "description": "string", "month": number, "youtubeSearchUrl": "string"}],
   "environmentSetup": {
     "tools": ["string"],
-    "reasons": ["string"], // Detailed "why" for each tool
+    "reasons": ["string"], 
     "resources": [{"name": "string", "url": "string", "type": "Software" | "Documentation" | "Video"}],
     "books": [{"title": "string", "author": "string", "description": "string"}]
   },

@@ -66,19 +66,28 @@ export default function SemesterDetail() {
   });
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem' }}>
+    <div className="detail-page-container">
       {/* Header */}
-      <div className="page-header" style={{ alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button onClick={() => router.back()} className="btn-secondary" style={{ padding: '0.5rem', borderRadius: '50%', minWidth: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ArrowLeft size={20} />
-          </button>
-          <div>
-            <h1 className="gradient-text" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', margin: 0 }}>Sem {roadmap.semesterNumber}</h1>
-            <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>Detailed 6-month OS timeline</p>
-          </div>
+      <div className="page-header" style={{ alignItems: 'flex-start', justifyContent: 'flex-start', textAlign: 'left', gap: '1rem' }}>
+        <button onClick={() => router.back()} className="btn-secondary" style={{ padding: '0.5rem', borderRadius: '50%', minWidth: '40px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '-0.5rem' }}>
+          <ArrowLeft size={20} />
+        </button>
+        
+        <div style={{ flex: 1 }}>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', margin: 0 }}>Sem {roadmap.semesterNumber}</h1>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.85rem' }}>Detailed Professional Roadmap</p>
         </div>
-        <div style={{ background: 'var(--accent-glow)', border: '1px solid var(--accent)', color: 'var(--accent)', padding: '0.4rem 0.8rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+
+        <div style={{ 
+            background: roadmap.status === 'ACTIVE' ? 'var(--accent)' : 'var(--accent-glow)', 
+            color: roadmap.status === 'ACTIVE' ? 'white' : 'var(--accent)',
+            border: '1px solid var(--accent)', 
+            padding: '0.5rem 1rem', 
+            borderRadius: '24px', 
+            fontSize: '0.75rem', 
+            fontWeight: '800',
+            boxShadow: roadmap.status === 'ACTIVE' ? '0 4px 12px var(--accent-glow)' : 'none'
+        }}>
           {roadmap.status}
         </div>
       </div>
@@ -94,46 +103,42 @@ export default function SemesterDetail() {
             <div key={month} className="glass-card" style={{ padding: 0, overflow: 'hidden', borderRadius: '20px' }}>
               <button 
                 onClick={() => setExpandedMonth(expandedMonth === month ? 0 : month)}
+                className="month-header"
                 style={{ 
-                  width: '100%', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
+                  width: '100%', padding: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
                   background: expandedMonth === month ? 'var(--bg-secondary)' : 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' 
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                  <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--accent)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1.1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ width: '40px', height: '40px', minWidth: '40px', borderRadius: '12px', background: 'var(--accent)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem' }}>
                     {month}
                   </div>
                   <div>
-                    <h3 style={{ margin: 0 }}>Month {month}</h3>
-                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Month {month}</h3>
+                    <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                       Focus: {weeks[0]?.focus?.split(':')[0] || 'Curriculum Focus'}
                     </p>
                   </div>
                 </div>
-                {expandedMonth === month ? <ChevronDown size={22} /> : <ChevronRight size={22} />}
+                {expandedMonth === month ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
               </button>
 
               {expandedMonth === month && (
-                <div style={{ padding: '1.5rem 1.5rem 2.5rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem', borderTop: '1px solid var(--border)', background: 'var(--bg-primary)' }}>
+                <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '2rem', borderTop: '1px solid var(--border)', background: 'var(--bg-primary)' }}>
                   {weeks.map((week: any) => (
-                    <div key={week.week} style={{ position: 'relative', paddingLeft: '2.5rem', borderLeft: '2px solid var(--border)' }}>
+                    <div key={week.week} className="week-item">
                       <div style={{ position: 'absolute', left: '-10px', top: '0', background: 'var(--bg-primary)', padding: '2px' }}>
                         <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'var(--accent)', border: '4px solid var(--bg-primary)' }} />
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                          <h4 style={{ margin: 0, fontSize: '1.1rem' }}>Week {week.week}: {week.focus}</h4>
+                        <div className="week-header">
+                          <h4 className="week-title">Week {week.week}: {week.focus}</h4>
                           {week.youtubeSearchUrl && (
                             <a 
                               href={week.youtubeSearchUrl} 
                               target="_blank" 
                               rel="noopener noreferrer" 
-                              className="btn-secondary" 
-                              style={{ 
-                                display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.8rem', 
-                                fontSize: '0.75rem', borderRadius: '10px', textDecoration: 'none', color: 'var(--danger)',
-                                border: '1px solid var(--border)'
-                              }}
+                              className="btn-secondary watch-btn"
                             >
                               <Video size={16} /> Watch
                             </a>
@@ -200,6 +205,51 @@ export default function SemesterDetail() {
             </div>
           </div>
 
+          {/* Setup Guide & Books */}
+          {roadmap.environmentSetup && (
+             <div className="glass-card" style={{ borderRadius: '24px', border: '1px solid var(--accent)' }}>
+                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
+                    <Loader2 size={22} color="var(--accent)" /> Setup & Resources
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <div>
+                        <h4 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Required Tools</h4>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            {roadmap.environmentSetup.tools.map((tool: string, i: number) => (
+                                <span key={i} title={roadmap.environmentSetup.reasons[i]} style={{ background: 'var(--bg-secondary)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', border: '1px solid var(--border)', cursor: 'help' }}>
+                                    {tool}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Recommended Books</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {roadmap.environmentSetup.books.map((book: any, i: number) => (
+                                <div key={i} style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                                    <strong style={{ display: 'block', fontSize: '0.95rem' }}>{book.title}</strong>
+                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>by {book.author}</span>
+                                    <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{book.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Setup Resources</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {roadmap.environmentSetup.resources.map((res: any, i: number) => (
+                                <a key={i} href={res.url} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '0.6rem 1rem', borderRadius: '10px', fontSize: '0.85rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                     {res.name} <span style={{ opacity: 0.5 }}>• {res.type}</span>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+             </div>
+          )}
+
           {/* Projects */}
           <div className="glass-card" style={{ borderRadius: '24px' }}>
             <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
@@ -224,6 +274,92 @@ export default function SemesterDetail() {
           </div>
         </div>
       </div>
+      <style jsx>{`
+        .detail-page-container {
+          maxWidth: 1000px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2rem;
+          padding: 1rem;
+          width: 100%;
+          box-sizing: border-box;
+          overflow-x: hidden;
+          text-align: left;
+        }
+
+        .header-title-group {
+          flex: 1;
+        }
+
+        .week-item {
+          position: relative;
+          padding-left: 2.5rem;
+          border-left: 2px solid var(--border);
+          transition: 0.3s;
+          margin-bottom: 0.5rem;
+        }
+
+        .week-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 1rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .week-title {
+          margin: 0;
+          font-size: 1.1rem;
+          line-height: 1.4;
+          word-break: break-word;
+          overflow-wrap: break-word;
+        }
+
+        .watch-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.4rem 0.8rem;
+          font-size: 0.75rem;
+          border-radius: 10px;
+          color: var(--danger) !important;
+          border: 1px solid var(--border);
+          flex-shrink: 0;
+        }
+
+        .month-header {
+          transition: background 0.2s ease;
+        }
+        
+        @media (max-width: 600px) {
+          .page-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            gap: 1rem !important;
+          }
+          .header-title-group {
+            flex: initial !important;
+            min-width: 0;
+            text-align: left;
+          }
+          .week-item {
+            padding-left: 1.5rem;
+          }
+          .month-header {
+            padding: 1rem !important;
+          }
+          .week-header {
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+          .watch-btn {
+            width: fit-content;
+          }
+        }
+      `}</style>
     </div>
   );
 }

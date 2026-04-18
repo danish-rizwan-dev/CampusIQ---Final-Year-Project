@@ -81,13 +81,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* --- MAIN STAGE --- */}
         <main 
           onScroll={handleScroll}
-          style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 2.5rem 3rem' }}
+          className="main-stage"
         >
           {children}
         </main>
       </div>
 
       <style jsx global>{`
+        .main-stage {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 2.5rem 3rem;
+            transition: padding 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .main-stage {
+                padding: 1rem 1rem 4rem;
+            }
+        }
         .hamburger-btn {
             display: none;
             background: transparent;

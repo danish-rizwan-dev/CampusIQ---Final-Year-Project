@@ -149,7 +149,7 @@ export default function SemesterCard({ id, semesterNumber, status, subjects, ski
         <Link 
           href={`/dashboard/roadmap/${id}`}
           className="btn-secondary" 
-          style={{ flex: 1, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.85rem' }}
+          style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', padding: '0.75rem 0.5rem' }}
         >
           View Full Plan <ChevronRight size={16} />
         </Link>
@@ -157,8 +157,8 @@ export default function SemesterCard({ id, semesterNumber, status, subjects, ski
         {isActive && onEvaluate && (
           <button 
             onClick={onEvaluate}
-            className="btn-primary " 
-            style={{ flex: 1, padding: '0.6rem', fontSize: '0.85rem' , justifyContent: 'center', alignItems: 'center' }}
+            className="btn-primary" 
+            style={{ flex: 1, fontSize: '0.85rem', padding: '0.75rem 0.5rem' }}
           >
             Complete Semester
           </button>

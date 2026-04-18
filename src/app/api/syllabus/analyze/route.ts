@@ -18,13 +18,16 @@ export async function POST(req: Request) {
     }
 
     const model = genAI.getGenerativeModel({ 
-        model: "gemini-3-flash-preview",
+        model: "gemini-1.5-flash",
       generationConfig: { responseMimeType: "application/json" } 
     });
 
-    const prompt = `You are a Senior Academic Counselor. Analyze this raw syllabus text and extract a structured study curriculum.
-    Rank topics by difficulty (Hard topics usually involve math/logic/complex systems).
-    Suggest a direct YouTube search URL for each topic.
+    const prompt = `You are a Senior Academic Counselor and Technical Writer. Analyze this raw syllabus text and extract a structured study curriculum.
+    For each topic, you MUST provide:
+    1. A Rank by difficulty.
+    2. A technical 'documentation' summary (200-300 words) that explains the core concepts of the topic like a textbook.
+    3. A list of 5-8 'practiceQuestions' that include both conceptual and numerical/practical questions.
+    4. A direct YouTube search URL.
 
     Syllabus Content: ${text}
 
@@ -36,7 +39,11 @@ export async function POST(req: Request) {
           "difficulty": "Easy" | "Medium" | "Hard",
           "subtopics": ["string"],
           "resources": ["string"],
-          "youtubeSearchUrl": "string" 
+          "youtubeSearchUrl": "string",
+          "documentation": "HTML-formatted string with <p>, <ul>, <li> tags explaining the core concepts in detail",
+          "practiceQuestions": [
+            { "question": "string", "type": "Concept" | "Numerical" | "Applied" }
+          ]
         }
       ],
       "estimatedHours": number,

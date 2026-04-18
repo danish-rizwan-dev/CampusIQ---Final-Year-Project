@@ -11,7 +11,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const user = await prisma.user.findUnique({ where: { clerkId } });
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
-    const { subjectName, topicName, difficulty, subtopics, resources, youtubeSearchUrl } = await req.json();
+    const { subjectName, topicName, difficulty, subtopics, resources, youtubeSearchUrl, documentation, practiceQuestions } = await req.json();
 
     const topic = await prisma.syllabusTopic.update({
       where: { id, userId: user.id },
@@ -21,7 +21,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         difficulty,
         subtopics,
         resources,
-        youtubeSearchUrl
+        youtubeSearchUrl,
+        documentation,
+        practiceQuestions
       }
     });
 
