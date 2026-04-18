@@ -1,0 +1,363 @@
+:root {
+  /* Light Mode (Default) */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.1);
+  --border: rgba(15, 23, 42, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --mesh-opacity: 0.4;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] {
+  /* Dark Mode Overrides */
+  --bg-primary: #030303;
+  --bg-secondary: #0f0f12;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent: #6366f1;
+  --accent-glow: rgba(99, 102, 241, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(15, 15, 20, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --mesh-opacity: 0.15;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* ─── VISUALS ──────────────────────────────────────────── */
+
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(at 0% 0%, var(--accent) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, #a855f7 0px, transparent 50%),
+    radial-gradient(at 50% 100%, #ec4899 0px, transparent 50%);
+  z-index: -1;
+  filter: blur(100px);
+  opacity: var(--mesh-opacity);
+  pointer-events: none;
+}
+
+/* ─── CARDS ────────────────────────────────────────────── */
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--card-shadow);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 var(--accent-glow);
+}
+
+.bento-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.bento-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ─── BUTTONS ───────────────────────────────────────────── */
+
+.btn-primary {
+  background-color: var(--accent);
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 99px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 4px 12px var(--accent-glow);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  border-radius: 99px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  background-color: var(--accent-glow);
+}
+
+/* ─── FORM INPUTS ───────────────────────────────────────── */
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ─── TYPOGRAPHY ────────────────────────────────────────── */
+
+.gradient-text {
+  background: linear-gradient(to right, var(--accent), #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  display: inline-block;
+}
+
+/* ─── RESPONSIVE GRID UTILITIES ─────────────────────────── */
+
+/* 2-column layout that stacks on mobile */
+.responsive-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* 3+ column auto-fit layout */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Asymmetric 2-col (wide + narrow) */
+.responsive-grid-wide {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 2rem;
+}
+
+/* Public bento 12-col system */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(200px, auto);
+  gap: 20px;
+}
+
+/* Bento card span helpers */
+.bento-main  { grid-column: span 8; grid-row: span 2; }
+.bento-small { grid-column: span 4; }
+.bento-wide  { grid-column: span 8; }
+.bento-third { grid-column: span 4; grid-row: span 2; }
+
+/* Utility for stacking flex rows on mobile */
+.stack-on-mobile {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Page header with title + actions */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* ─── SCROLLBAR ─────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+/* ─── ANIMATIONS ────────────────────────────────────────── */
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up { animation: fade-in-up 0.6s ease forwards; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+.float-anim { animation: float 5s ease-in-out infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── MOBILE SIDEBAR OVERLAY ────────────────────────────── */
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 199;
+  backdrop-filter: blur(4px);
+}
+
+/* ─── BREAKPOINTS ───────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .responsive-grid-wide {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Grids stack on tablet/mobile */
+  .responsive-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .responsive-grid-wide {
+    grid-template-columns: 1fr;
+  }
+
+  /* Bento grid collapses to full width */
+  .bento-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+  .bento-main,
+  .bento-small,
+  .bento-wide,
+  .bento-third { grid-column: span 1; grid-row: span 1; }
+
+  /* Cards reduce padding */
+  .glass-card {
+    padding: 1.25rem;
+  }
+
+  .bento-card {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
+
+  /* Buttons become full width in stacked forms */
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.65rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Page header stacks */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Stack-on-mobile rows go vertical */
+  .stack-on-mobile {
+    flex-wrap: wrap;
+  }
+
+  /* Show sidebar overlay on mobile */
+  .sidebar-overlay.active {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-card {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .bento-card {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.3rem !important; }
+}
