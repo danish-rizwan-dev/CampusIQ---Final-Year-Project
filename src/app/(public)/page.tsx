@@ -150,30 +150,6 @@ export default function LandingPage() {
             </div>
         </div>
 
-        {/* HIDDEN SIGNATURE IN THE CORNER */}
-        <div 
-          className="signature-tag"
-          style={{ 
-            position: 'absolute', 
-            bottom: '20px', 
-            right: '30px', 
-            opacity: 0.3,
-            transition: '0.3s ease',
-            cursor: 'default',
-            textAlign: 'right'
-          }}
-        >
-            <p style={{ fontSize: '0.6rem', letterSpacing: '2px', color: 'var(--text-secondary)', margin: 0 }}>CODE ARCHITECT</p>
-            <p style={{ 
-              fontSize: '1.1rem', 
-              fontWeight: '700', 
-              color: 'var(--text-primary)', 
-              margin: 0,
-              fontFamily: 'serif' 
-            }}>
-              Danish Rizwan
-            </p>
-        </div>
       </footer>
 
       {/* --- FLOATING HUD --- */}
@@ -202,7 +178,6 @@ export default function LandingPage() {
 
       <style jsx global>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .signature-tag:hover { opacity: 1 !important; }
       `}</style>
     </div>
   );

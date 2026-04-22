@@ -153,7 +153,7 @@ export default function RoadmapPage() {
             <MapIcon size={48} color="var(--accent)" />
           </div>
           <h1 className="gradient-text" style={{ fontSize: '2.5rem', margin: '0 0 1rem' }}>Setup Your Roadmap</h1>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Define your goals and we'll generate a semester-by-semester plan using the state-of-the-art Gemini 1.5 Flash.</p>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Define your goals and we'll generate a semester-by-semester plan using the state-of-the-art Gemini 3 Flash Preview.</p>
           
           <form onSubmit={(e) => handleGenerateRoadmap(e)} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'left' }}>
             <div className="responsive-grid-2" style={{ gap: '1rem' }}>

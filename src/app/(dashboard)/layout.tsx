@@ -129,7 +129,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             })}
         </nav>
       </div>
-
       <style jsx global>{`
         .main-stage {
             flex: 1;

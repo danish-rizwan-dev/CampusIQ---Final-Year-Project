@@ -16,10 +16,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing roadmapId' }, { status: 400 });
     }
 
-    // Weighted performance score - Normalize GPA to 100-point scale (gpa * 10)
-    const normalizedGpa = Number(gpa) * 10;
+    // Weighted performance score - Metrics are already on 0-100 scale
     const performanceScore =
-      (normalizedGpa * 0.30) +
+      (Number(gpa) * 0.30) +
       (Number(timeConsistency) * 0.20) +
       (Number(conceptScore) * 0.25) +
       (Number(assignmentRate) * 0.15) +

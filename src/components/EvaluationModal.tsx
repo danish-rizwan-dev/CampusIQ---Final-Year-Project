@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, TrendingUp, TrendingDown, Minus, X } from 'lucide-react';
+import { Loader2, TrendingUp, TrendingDown, Minus, X, Target, Book, Layout, Clock, BrainCircuit, Sparkles, Activity } from 'lucide-react';
 import { toast } from 'sonner';
 
 const METRICS = [
-  { key: 'gpa', label: 'GPA / Marks', weight: '30%', hint: 'Your overall grade percentage this semester' },
-  { key: 'assignmentRate', label: 'Assignment Completion', weight: '15%', hint: 'Percentage of assignments submitted on time' },
-  { key: 'conceptScore', label: 'Concept Mastery', weight: '25%', hint: 'How well you understood core concepts (self-rating)' },
-  { key: 'timeConsistency', label: 'Study Consistency', weight: '20%', hint: 'How regularly you studied throughout the semester' },
-  { key: 'mockTestScore', label: 'Mock Test Performance', weight: '10%', hint: 'Average score across practice tests' },
+  { key: 'gpa', label: 'GPA', weight: '30%', icon: <Target size={14} /> },
+  { key: 'assignmentRate', label: 'Work', weight: '15%', icon: <Layout size={14} /> },
+  { key: 'conceptScore', label: 'Mastery', weight: '25%', icon: <Book size={14} /> },
+  { key: 'timeConsistency', label: 'Focus', weight: '20%', icon: <Clock size={14} /> },
+  { key: 'mockTestScore', label: 'Tests', weight: '10%', icon: <BrainCircuit size={14} /> },
 ];
 
 interface Props {
@@ -36,8 +36,7 @@ export default function EvaluationModal({ roadmapId, onClose, onSuccess }: Props
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    toast.info("AI is evaluating your semester performance...");
-    try {
+    const promise = (async () => {
       const res = await fetch('/api/roadmap/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,114 +45,89 @@ export default function EvaluationModal({ roadmapId, onClose, onSuccess }: Props
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setResult(data);
-      toast.success("Semester evaluation complete!");
-    } catch (err) {
-      toast.error("Failed to generate next semester. Please try again.");
-      console.error(err);
-    }
+      return data;
+    })();
+
+    toast.promise(promise, {
+      loading: 'AI is synthesizing your next semester...',
+      success: 'Evaluation complete!',
+      error: 'Evaluation failed.'
+    });
+
+    try { await promise; } catch(e) {}
     setLoading(false);
   };
 
   const trendConfig = {
-    ADVANCED: { icon: <TrendingUp size={32} color="var(--success)" />, color: 'var(--success)', label: '🚀 Advanced Mode Unlocked', desc: 'Your next semester will include advanced topics and complex real-world projects.' },
-    BALANCED: { icon: <Minus size={32} color="var(--warning)" />, color: 'var(--warning)', label: '⚖️ Balanced Mode', desc: 'Your next roadmap maintains pace while reinforcing weak areas identified this semester.' },
-    FOUNDATION: { icon: <TrendingDown size={32} color="var(--danger)" />, color: 'var(--danger)', label: '🔁 Foundation Mode', desc: 'Next semester will slow down and reinforce fundamentals to build a stronger base.' },
+    ADVANCED: { icon: <TrendingUp size={24} color="var(--success)" />, label: 'ADVANCED' },
+    BALANCED: { icon: <Minus size={24} color="var(--warning)" />, label: 'BALANCED' },
+    FOUNDATION: { icon: <TrendingDown size={24} color="var(--danger)" />, label: 'FIX_MODE' },
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
-      <div className="glass-card" style={{ width: '100%', maxWidth: '580px', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
-        <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-          <X size={22} />
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+      <div className="glass-card fade-in-up" style={{ width: '100%', maxWidth: '440px', borderRadius: '24px', padding: '1.5rem', position: 'relative', border: '1px solid var(--accent)' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+          <X size={18} />
         </button>
 
-        {/* Result View */}
-        {result && !loading && (
-          <div style={{ textAlign: 'center' }}>
-            <h2 className="gradient-text" style={{ marginBottom: '1rem' }}>Evaluation Complete!</h2>
-
-            <div style={{ fontSize: '4rem', fontWeight: '900', color: result.performanceScore >= 80 ? 'var(--success)' : result.performanceScore >= 50 ? 'var(--warning)' : 'var(--danger)', marginBottom: '0.5rem' }}>
-              {result.performanceScore?.toFixed(1)}
-            </div>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Performance Score</p>
-
-            {result.trend && (
-              <div style={{ background: 'var(--bg-secondary)', borderRadius: '12px', padding: '1.5rem', marginBottom: '2rem', border: `1px solid ${trendConfig[result.trend as keyof typeof trendConfig]?.color}44` }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                  {trendConfig[result.trend as keyof typeof trendConfig]?.icon}
-                  <strong style={{ fontSize: '1.1rem', color: trendConfig[result.trend as keyof typeof trendConfig]?.color }}>
-                    {trendConfig[result.trend as keyof typeof trendConfig]?.label}
-                  </strong>
+        {result && !loading ? (
+          <div style={{ textAlign: 'center' }} className="fade-in">
+            <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.1rem', fontWeight: 900 }}>Evaluation Summary</h3>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '2rem' }}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '3rem', fontWeight: 950, lineHeight: 1 }}>{result.performanceScore?.toFixed(0)}</div>
+                    <div style={{ fontSize: '0.6rem', fontWeight: 900, color: 'var(--text-secondary)', marginTop: '4px' }}>OPS_SCORE</div>
                 </div>
-                <p style={{ margin: 0, color: 'var(--text-secondary)' }}>
-                  {trendConfig[result.trend as keyof typeof trendConfig]?.desc}
-                </p>
-              </div>
-            )}
-
-            {result.finished && (
-              <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))', borderRadius: '12px', padding: '1.5rem', marginBottom: '2rem' }}>
-                <p style={{ fontSize: '1.2rem', fontWeight: '700' }}>🎓 You've completed all 8 semesters!</p>
-              </div>
-            )}
-
-            <button className="btn-primary" style={{ width: '100%' }} onClick={onSuccess}>
-              View Updated Roadmap
+                <div style={{ width: '1px', background: 'var(--border)' }} />
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '3rem' }}>
+                        {trendConfig[result.trend as keyof typeof trendConfig]?.icon}
+                    </div>
+                    <div style={{ fontSize: '0.6rem', fontWeight: 900, color: 'var(--text-secondary)', marginTop: '4px' }}>{trendConfig[result.trend as keyof typeof trendConfig]?.label}</div>
+                </div>
+            </div>
+            <button className="btn-primary" style={{ width: '100%', padding: '0.8rem' }} onClick={onSuccess}>
+              Continue to Next Semester
             </button>
           </div>
-        )}
-
-        {/* Loading */}
-        {loading && (
-          <div style={{ textAlign: 'center', padding: '3rem 0' }}>
-            <Loader2 size={48} color="var(--accent)" style={{ animation: 'spin 1s linear infinite', marginBottom: '1rem' }} />
-            <h3>AI is analyzing your performance and building next semester...</h3>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        ) : loading ? (
+          <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+            <Loader2 size={32} className="spin" color="var(--accent)" style={{ marginBottom: '1rem' }} />
+            <p style={{ fontWeight: 800, fontSize: '0.8rem', letterSpacing: '1px', opacity: 0.7 }}>SYNCING_TRAJECTORY</p>
           </div>
-        )}
+        ) : (
+          <form onSubmit={handleSubmit} className="fade-in">
+            <header style={{ marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Activity size={18} color="var(--accent)" />
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900 }}>Semester Evaluation</h3>
+            </header>
 
-        {/* Form */}
-        {!result && !loading && (
-          <form onSubmit={handleSubmit}>
-            <h2 style={{ marginBottom: '0.5rem' }} className="gradient-text">End of Semester Review</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '0.9rem' }}>
-              Your scores determine the adaptive difficulty of Semester {' '}
-              <strong style={{ color: 'var(--accent)' }}>(next)</strong>.
-              Be honest — this data helps the AI calibrate your roadmap.
-            </p>
-
-            {/* Live score preview */}
-            <div style={{ background: 'var(--bg-secondary)', borderRadius: '12px', padding: '1rem 1.5rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Predicted Score</span>
-              <span style={{
-                fontSize: '2rem', fontWeight: '900',
-                color: weightedScore >= 80 ? 'var(--success)' : weightedScore >= 50 ? 'var(--warning)' : 'var(--danger)'
-              }}>
-                {weightedScore}
-              </span>
+            <div style={{ background: 'var(--bg-secondary)', borderRadius: '16px', padding: '1rem', marginBottom: '1.5rem', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, opacity: 0.6 }}>PREDICTED</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: '950', color: weightedScore >= 80 ? 'var(--success)' : 'var(--accent)' }}>{weightedScore}%</div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
               {METRICS.map(m => (
-                <div key={m.key}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <label style={{ margin: 0 }}>{m.label} <span style={{ color: 'var(--accent)', fontSize: '0.8rem' }}>({m.weight})</span></label>
-                    <strong style={{ color: 'var(--accent)' }}>{formData[m.key]}%</strong>
+                <div key={m.key} style={{ display: 'grid', gridTemplateColumns: '80px 1fr 40px', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', fontWeight: 800, opacity: 0.8 }}>
+                    {m.icon} {m.label}
                   </div>
                   <input
                     type="range"
                     min={0} max={100}
                     value={formData[m.key]}
                     onChange={e => setFormData(prev => ({ ...prev, [m.key]: Number(e.target.value) }))}
-                    style={{ width: '100%', accentColor: 'var(--accent)' }}
+                    style={{ width: '100%', accentColor: 'var(--accent)', height: '4px', cursor: 'pointer' }}
                   />
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.25rem 0 0' }}>{m.hint}</p>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 900, textAlign: 'right', color: 'var(--accent)' }}>{formData[m.key]}%</span>
                 </div>
               ))}
             </div>
 
-            <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '2rem', padding: '1rem', fontSize: '1rem' }}>
-              Submit & Generate Next Semester
+            <button type="submit" className="btn-primary" style={{ width: '100%', padding: '0.9rem', fontSize: '0.9rem' }}>
+              <Sparkles size={16} /> GENERATE SEMESTER
             </button>
           </form>
         )}

@@ -53,7 +53,7 @@ Bridge the gap between passing exams and landing your dream role.
 | **Frontend** | [Next.js 16](https://nextjs.org/) (App Router), [React 19](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/) |
 | **Backend** | Next.js API Routes (Edge Compatible) |
 | **Database** | [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/) |
-| **Artificial Intelligence** | [Google Gemini 1.5 Pro](https://ai.google.dev/) |
+| **Artificial Intelligence** | [Google Gemini 3 Flash Preview](https://ai.google.dev/) |
 | **Authentication** | [Clerk](https://clerk.com/) |
 | **State Management** | [Zustand](https://zustand-demo.pmnd.rs/) |
 | **UI Components** | Radix UI, Lucide Icons, Sonner Toasts |

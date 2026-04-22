@@ -1,120 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { 
-  FileText, Link as LinkIcon, Book, Sparkles, 
-  Video, Plus, CheckCircle2, AlertTriangle, Loader2,
-  Trash2, Edit3, Save, X, ChevronRight, GraduationCap, ExternalLink, Library
+import { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  FileText, Link as LinkIcon, Book, Sparkles,
+  Video, Plus, AlertTriangle, Loader2,
+  Trash2, Edit3, Save, X, ChevronRight, GraduationCap,
+  Upload, FileScan, CheckCircle2, ArrowRight
 } from 'lucide-react';
 import { toast } from 'sonner';
-
-function ExpandedStudyView({ topic }: { topic: any }) {
-  const [activeTab, setActiveTab] = useState<'docs' | 'links' | 'practice'>('docs');
-
-  return (
-    <div className="study-view fade-in" style={{ 
-        marginTop: '1.5rem', 
-        borderTop: '1px solid var(--border)', 
-        paddingTop: '1.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.5rem'
-    }}>
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-secondary)', padding: '4px', borderRadius: '12px', width: 'fit-content' }}>
-        {[
-          { id: 'docs', label: 'Documentation', icon: <Library size={14} /> },
-          { id: 'links', label: 'Resources', icon: <LinkIcon size={14} /> },
-          { id: 'practice', label: 'Practice Arena', icon: <GraduationCap size={14} /> }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              border: 'none',
-              fontSize: '0.75rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: activeTab === tab.id ? 'var(--accent)' : 'transparent',
-              color: activeTab === tab.id ? 'white' : 'var(--text-secondary)',
-              transition: '0.2s'
-            }}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="tab-content" style={{ minHeight: '200px' }}>
-        {activeTab === 'docs' && (
-          <div className="fade-in">
-            <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--accent)' }}>Technical Deep-Dive</h4>
-            <div 
-                className="docs-content"
-                style={{ fontSize: '0.9rem', lineHeight: '1.7', color: 'var(--text-primary)', opacity: 0.9 }}
-                dangerouslySetInnerHTML={{ __html: topic.documentation || '<p>No detailed documentation available for this topic yet. Try regenerating or editing the card.</p>' }} 
-            />
-          </div>
-        )}
-
-        {activeTab === 'links' && (
-          <div className="fade-in">
-             <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--accent)' }}>Study Resources & Lectures</h4>
-             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
-                <a href={topic.youtubeSearchUrl} target="_blank" rel="noopener noreferrer" className="glass-card" style={{ padding: '1rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid var(--danger)' }}>
-                    <Video size={20} color="var(--danger)" />
-                    <div>
-                        <p style={{ margin: 0, fontWeight: '700', fontSize: '0.8rem', color: 'var(--text-primary)' }}>Video Lectures</p>
-                        <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Quality tutorials</p>
-                    </div>
-                </a>
-                {topic.resources?.map((res: string, i: number) => (
-                    <div key={i} className="glass-card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <ExternalLink size={20} color="var(--accent)" />
-                        <p style={{ margin: 0, fontWeight: '600', fontSize: '0.8rem', color: 'var(--text-primary)' }}>{res}</p>
-                    </div>
-                ))}
-             </div>
-          </div>
-        )}
-
-        {activeTab === 'practice' && (
-          <div className="fade-in">
-            <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--accent)' }}>Sample & Previous Year Questions</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                {topic.practiceQuestions?.length > 0 ? topic.practiceQuestions.map((pq: any, i: number) => (
-                    <div key={i} className="glass-card" style={{ padding: '1rem', display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                        <div style={{ background: 'var(--accent-glow)', padding: '6px', borderRadius: '8px', color: 'var(--accent)', fontSize: '0.7rem', fontWeight: '800' }}>Q{i+1}</div>
-                        <div>
-                            <p style={{ margin: '0 0 0.4rem 0', fontSize: '0.9rem', fontWeight: '500' }}>{pq.question}</p>
-                            <span style={{ fontSize: '0.65rem', padding: '2px 8px', background: 'var(--bg-secondary)', borderRadius: '4px', border: '1px solid var(--border)', textTransform: 'uppercase' }}>{pq.type}</span>
-                        </div>
-                    </div>
-                )) : (
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>No practice questions identified yet.</p>
-                )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+import Link from 'next/link';
 
 export default function SyllabusAnalyzer() {
+  const [inputTab, setInputTab] = useState<'text' | 'pdf'>('text');
   const [syllabusText, setSyllabusText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [parsing, setParsing] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [persistentTopics, setPersistentTopics] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<any>(null);
   const [showInput, setShowInput] = useState(true);
-  const [expandedTopicId, setExpandedTopicId] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfExtracted, setPdfExtracted] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [clearingAll, setClearingAll] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchTopics();
@@ -131,10 +42,59 @@ export default function SyllabusAnalyzer() {
     }
   };
 
+  const clearAllTopics = async () => {
+    setClearingAll(false);
+    const promise = Promise.all(persistentTopics.map(t => fetch(`/api/syllabus/${t.id}`, { method: 'DELETE' })));
+
+    toast.promise(promise, {
+      loading: 'Clearing your knowledge graph...',
+      success: () => {
+        setPersistentTopics([]);
+        setShowInput(true);
+        return 'All cards cleared.';
+      },
+      error: 'Failed to clear some cards.'
+    });
+  };
+
+  const ACCEPTED_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/heic', 'image/heif'];
+
+  const handleFileSelect = useCallback(async (file: File) => {
+    if (!ACCEPTED_TYPES.includes(file.type)) {
+      toast.error('Unsupported file type.');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File must be under 10 MB.');
+      return;
+    }
+    setPdfFile(file);
+    setPdfExtracted(false);
+    setParsing(true);
+    const promise = (async () => {
+      const form = new FormData();
+      form.append('file', file);
+      const res = await fetch('/api/syllabus/parse-pdf', { method: 'POST', body: form });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setSyllabusText(data.text);
+      setPdfExtracted(true);
+      return data;
+    })();
+
+    toast.promise(promise, {
+      loading: `Extracting intelligence from ${file.name}...`,
+      success: (data) => `Neural extraction complete.`,
+      error: (err) => err.message || 'Extraction failed.'
+    });
+
+    try { await promise; } catch (e) { }
+    setParsing(false);
+  }, []);
+
   const analyzeSyllabus = async () => {
     setLoading(true);
-    toast.info("AI is reading your syllabus... This takes a few seconds.");
-    try {
+    const promise = (async () => {
       const res = await fetch('/api/syllabus/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -142,11 +102,9 @@ export default function SyllabusAnalyzer() {
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      
-      // Automatically save each extracted topic to the database
-      toast.info(`Saving ${data.topics.length} subjects to your profile...`);
-      for (const topic of data.topics) {
-        await fetch('/api/syllabus', {
+
+      await Promise.all(data.topics.map((topic: any) =>
+        fetch('/api/syllabus', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -159,223 +117,264 @@ export default function SyllabusAnalyzer() {
             documentation: topic.documentation,
             practiceQuestions: topic.practiceQuestions
           })
-        });
-      }
-      
+        })
+      ));
+
       await fetchTopics();
       setSyllabusText('');
+      setPdfFile(null);
+      setPdfExtracted(false);
       setShowInput(false);
-      toast.success("Analysis complete! All subjects added as persistent cards.");
-    } catch (e) {
-      toast.error("Failed to analyze syllabus. Check text content.");
-    }
+      return data;
+    })();
+
+    toast.promise(promise, {
+      loading: 'AI is decomposing your syllabus...',
+      success: 'Knowledge graph generated!',
+      error: 'Analysis failed.'
+    });
+
+    try { await promise; } catch (e) { }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to remove this subject card?")) return;
-    try {
-      await fetch(`/api/syllabus/${id}`, { method: 'DELETE' });
-      setPersistentTopics(prev => prev.filter(t => t.id !== id));
-      toast.success("Card removed.");
-    } catch (e) {
-      toast.error("Delete failed.");
-    }
-  };
+    setDeleteId(null);
+    const promise = fetch(`/api/syllabus/${id}`, { method: 'DELETE' });
 
-  const handleUpdate = async () => {
-    if (!editingId) return;
-    try {
-      const res = await fetch(`/api/syllabus/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editData)
-      });
-      if (res.ok) {
-        toast.success("Updated successfully.");
-        setEditingId(null);
-        fetchTopics();
-      }
-    } catch (e) {
-      toast.error("Update failed.");
-    }
-  };
-
-  const syncToTasks = async (topic: any) => {
-    setSyncing(true);
-    try {
-      await fetch('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: `Study: ${topic.topicName}`,
-          type: 'STUDY',
-          priority: topic.difficulty === 'Hard' ? 'HIGH' : 'MEDIUM',
-          description: `Focus: ${topic.subtopics.join(', ')}. Tutorial: ${topic.youtubeSearchUrl}`
-        })
-      });
-      toast.success(`"${topic.topicName}" added to tasks!`);
-    } catch (e) {
-      toast.error("Sync failed.");
-    }
-    setSyncing(false);
+    toast.promise(promise, {
+      loading: 'Removing card...',
+      success: () => {
+        setPersistentTopics(prev => prev.filter(t => t.id !== id));
+        return 'Card removed.';
+      },
+      error: 'Delete failed.'
+    });
   };
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem' }}>
-      <header className="page-header" style={{ alignItems: 'flex-start' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2.5rem', padding: '1rem' }}>
+      <header className="page-header">
         <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', margin: 0 }}>Syllabus Intelligence</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '0.5rem' }}>
-            Persistent curriculum management with AI-powered topic extraction.
-          </p>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', margin: 0 }}>Knowledge Graph</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem' }}>Your academic curriculum, decomposed into actionable intelligence.</p>
         </div>
-        {!showInput && (
-          <button className="btn-primary" onClick={() => setShowInput(true)} style={{ gap: '0.5rem', width: 'auto' }}>
-            <Plus size={18} /> Add More
-          </button>
-        )}
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          {persistentTopics.length > 0 && (
+            <button className="btn-secondary" onClick={() => setClearingAll(true)} style={{ color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+              <Trash2 size={18} /> Clear Data
+            </button>
+          )}
+          {!showInput && (
+            <button className="btn-primary" onClick={() => setShowInput(true)}>
+              <Plus size={18} /> New Syllabus
+            </button>
+          )}
+        </div>
       </header>
 
       {showInput && (
-        <div className="glass-card fade-in" style={{ padding: 'clamp(1.25rem, 5vw, 2.5rem)', borderRadius: '24px', position: 'relative' }}>
-          {persistentTopics.length > 0 && (
-            <button onClick={() => setShowInput(false)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-              <X size={24} />
-            </button>
-          )}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-            <div style={{ padding: '0.75rem', background: 'var(--accent-glow)', borderRadius: '12px', color: 'var(--accent)' }}>
-              <FileText size={24} />
-            </div>
-            <div>
-              <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Extract New Subjects</h3>
-            </div>
+        <div className="glass-card fade-in" style={{ padding: '2rem', borderRadius: '32px' }}>
+          <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-secondary)', padding: '4px', borderRadius: '12px', width: 'fit-content', marginBottom: '2rem' }}>
+            {([{ id: 'text', label: 'Paste Text' }, { id: 'pdf', label: 'Upload File' }] as const).map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setInputTab(tab.id)}
+                style={{
+                  padding: '0.5rem 1.25rem', borderRadius: '10px', border: 'none',
+                  fontSize: '0.85rem', fontWeight: '700', cursor: 'pointer',
+                  background: inputTab === tab.id ? 'var(--accent)' : 'transparent',
+                  color: inputTab === tab.id ? 'white' : 'var(--text-secondary)',
+                  transition: '0.2s'
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
-          
-          <textarea 
-            className="input-field" 
-            style={{ minHeight: '200px', fontFamily: 'monospace', resize: 'vertical', borderRadius: '16px', padding: '1rem', fontSize: '0.9rem' }}
-            placeholder="e.g. Unit 1: OS Architecture..."
-            value={syllabusText}
-            onChange={e => setSyllabusText(e.target.value)}
-          />
-          
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-            <button className="btn-primary" 
-              onClick={analyzeSyllabus} 
-              disabled={loading || !syllabusText}
-              style={{ width: '100%', padding: '0.9rem', borderRadius: '12px', fontSize: '0.95rem', gap: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+
+          {inputTab === 'text' ? (
+            <textarea
+              className="input-field"
+              style={{ minHeight: '180px', borderRadius: '20px', padding: '1.5rem', fontSize: '1rem' }}
+              placeholder="Paste syllabus text here..."
+              value={syllabusText}
+              onChange={e => setSyllabusText(e.target.value)}
+            />
+          ) : (
+            <div
+              onClick={() => !parsing && fileInputRef.current?.click()}
+              style={{
+                border: `2px dashed var(--border)`,
+                borderRadius: '20px',
+                padding: '3rem',
+                textAlign: 'center',
+                cursor: 'pointer',
+                background: 'var(--bg-secondary)',
+                minHeight: '180px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '1rem'
+              }}
             >
-              {loading ? <Loader2 size={18} className="spin" /> : <Sparkles size={18} />}
-              {loading ? 'AI Parsing...' : 'Extract & Save Cards'}
-            </button>
-          </div>
+              <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={e => handleFileSelect(e.target.files?.[0] as File)} />
+              {parsing ? <Loader2 size={32} className="spin" color="var(--accent)" /> : <Upload size={32} color="var(--accent)" />}
+              <p style={{ margin: 0, fontWeight: '700' }}>{pdfFile ? pdfFile.name : 'Click to upload syllabus'}</p>
+            </div>
+          )}
+
+          <button
+            className="btn-primary"
+            onClick={analyzeSyllabus}
+            disabled={loading || !syllabusText}
+            style={{ width: '100%', padding: '1rem', marginTop: '1.5rem', borderRadius: '16px' }}
+          >
+            {loading ? <Loader2 size={20} className="spin" /> : <Sparkles size={20} />}
+            {loading ? 'Analyzing...' : 'Generate Subject Graph'}
+          </button>
         </div>
       )}
 
-      <div style={{ display: 'grid', gap: '1.5rem' }}>
-        {persistentTopics.map((topic) => (
-          <div key={topic.id} className="glass-card fade-in" style={{ 
-            borderRadius: '24px',
-            borderLeft: `8px solid ${topic.difficulty === 'Hard' ? 'var(--danger)' : topic.difficulty === 'Medium' ? 'var(--warning)' : 'var(--success)'}`,
-            padding: '1.5rem',
-            position: 'relative'
-          }}>
-            {editingId === topic.id ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div className="responsive-grid-2" style={{ gap: '1rem' }}>
-                  <div>
-                    <label>Main Topic Name</label>
-                    <input className="input-field" style={{ marginBottom: 0 }} value={editData.topicName} onChange={e => setEditData({...editData, topicName: e.target.value})} />
-                  </div>
-                  <div>
-                    <label>Difficulty</label>
-                    <select className="input-field" style={{ marginBottom: 0 }} value={editData.difficulty} onChange={e => setEditData({...editData, difficulty: e.target.value})}>
-                      <option>Easy</option>
-                      <option>Medium</option>
-                      <option>Hard</option>
-                    </select>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-                  <button className="btn-secondary" onClick={() => setEditingId(null)}>Cancel</button>
-                  <button className="btn-primary" onClick={handleUpdate}><Save size={16} /> Save</button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '0.35rem' }}>
-                  <button className="icon-btn" title="Sync to Tasks" onClick={() => syncToTasks(topic)} disabled={syncing}><Plus size={16} /></button>
-                  <button className="icon-btn" title="Edit Card" onClick={() => {setEditingId(topic.id); setEditData(topic);}}><Edit3 size={16} /></button>
-                  <button className="icon-btn" title="Delete" style={{ color: 'var(--danger)' }} onClick={() => handleDelete(topic.id)}><Trash2 size={16} /></button>
-                </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+        {Object.entries(
+          persistentTopics.reduce((acc: any, topic) => {
+            const subject = topic.subjectName || "Unassigned";
+            if (!acc[subject]) acc[subject] = [];
+            acc[subject].push(topic);
+            return acc;
+          }, {})
+        ).map(([subject, topics]: [string, any]) => (
+          <div key={subject}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Book size={24} color="var(--accent)" /> {subject}
+            </h2>
 
-                <div style={{ marginBottom: '1.25rem', paddingRight: '4rem' }}>
-                  <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>{topic.subjectName}</span>
-                  <h3 style={{ margin: '0.15rem 0 0.4rem', fontSize: '1.3rem' }}>{topic.topicName}</h3>
-                  <div style={{ display: 'flex', gap: '0.75rem' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
-                      <AlertTriangle size={13} color={topic.difficulty === 'Hard' ? 'var(--danger)' : 'var(--success)'} /> {topic.difficulty} Priority
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="syllabus-grid">
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', margin: 0, fontSize: '0.9rem' }}><Book size={16} color="var(--accent)" /> Concept Mastery</h4>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                      {topic.subtopics.slice(0, 4).map((sub: string, i: number) => (
-                        <span key={i} style={{ background: 'var(--bg-secondary)', padding: '0.25rem 0.6rem', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid var(--border)' }}>
-                          {sub}
+            <div className="syllabus-square-grid">
+              {topics.map((topic: any) => (
+                <Link key={topic.id} href={`/dashboard/syllabus/${topic.id}`} style={{ textDecoration: 'none' }}>
+                  <div className="glass-card square-card fade-in">
+                    <button
+                      className="delete-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setDeleteId(topic.id);
+                      }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+
+                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div style={{
+                          width: '40px',
+                          height: '40px',
+                          background: topic.difficulty === 'Hard' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                          borderRadius: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '1rem'
+                        }}>
+                          {topic.difficulty === 'Hard' ? <AlertTriangle size={20} color="var(--danger)" /> : <CheckCircle2 size={20} color="var(--success)" />}
+                        </div>
+                        <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.3 }}>
+                          {topic.topicName}
+                        </h3>
+                        <p style={{ margin: '8px 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                          {topic.subtopics.length} Key Concepts
+                        </p>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, color: topic.difficulty === 'Hard' ? 'var(--danger)' : 'var(--success)', letterSpacing: '1px' }}>
+                          {topic.difficulty.toUpperCase()}
                         </span>
-                      ))}
-                      {topic.subtopics.length > 4 && <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>+{topic.subtopics.length - 4} more</span>}
+                        <ArrowRight size={18} color="var(--text-secondary)" />
+                      </div>
                     </div>
                   </div>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', margin: 0, fontSize: '0.9rem' }}><LinkIcon size={16} color="var(--accent)" /> Learning Path</h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                       <button 
-                        onClick={() => setExpandedTopicId(expandedTopicId === topic.id ? null : topic.id)}
-                        className="btn-primary" 
-                        style={{ padding: '0.5rem', fontSize: '0.75rem', borderRadius: '10px', gap: '0.5rem' }}
-                      >
-                        {expandedTopicId === topic.id ? 'Close Study View' : 'Start Deep Dive'}
-                        <ChevronRight size={14} style={{ transform: expandedTopicId === topic.id ? 'rotate(90deg)' : 'none', transition: '0.3s' }} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {expandedTopicId === topic.id && <ExpandedStudyView topic={topic} />}
-              </>
-            )}
+                </Link>
+              ))}
+            </div>
           </div>
         ))}
       </div>
 
-      <style jsx>{`
+      {/* Custom Delete Modal */}
+      {(deleteId || clearingAll) && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+          <div className="glass-card fade-in-up" style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '2rem', borderRadius: '24px', border: '1px solid var(--danger-glow)' }}>
+            <div style={{ background: 'var(--danger-glow)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--danger)' }}>
+              <AlertTriangle size={30} />
+            </div>
+            <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem', fontWeight: 900 }}>Dangerous Action</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '2rem' }}>
+              {clearingAll ? 'Are you sure you want to PERMANENTLY clear your entire knowledge graph?' : 'Are you sure you want to remove this subject card?'}
+            </p>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button className="btn-secondary" style={{ flex: 1 }} onClick={() => { setDeleteId(null); setClearingAll(false); }}>Cancel</button>
+              <button className="btn-primary" style={{ flex: 1, background: 'var(--danger)', boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)' }} onClick={() => clearingAll ? clearAllTopics() : handleDelete(deleteId!)}>Confirm Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{`
+        .syllabus-square-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .square-card {
+          aspect-ratio: 1 / 1;
+          position: relative;
+          cursor: pointer;
+          transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          padding: 1.5rem !important;
+        }
+
+        .square-card:hover {
+          transform: translateY(-8px) scale(1.02);
+          border-color: var(--accent) !important;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+        }
+
+        .delete-btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: rgba(239, 68, 68, 0.1);
+          border: none;
+          color: var(--danger);
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          opacity: 0;
+          transition: 0.2s;
+          z-index: 10;
+        }
+
+        .square-card:hover .delete-btn {
+          opacity: 1;
+        }
+
+        .delete-btn:hover {
+          background: var(--danger);
+          color: white;
+        }
+
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .fade-in { animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .icon-btn { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 5px; cursor: pointer; color: var(--text-secondary); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
-        .icon-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-        
-        .syllabus-grid {
-          display: grid;
-          grid-template-columns: 1.5fr 1fr;
-          gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-          .syllabus-grid {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-          }
-        }
       `}</style>
     </div>
   );

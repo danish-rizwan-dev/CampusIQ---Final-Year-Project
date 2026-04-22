@@ -33,7 +33,7 @@ export async function GET() {
 
     const chartData = completedSemesters.map((s: any) => ({
       sem: s.semesterNumber,
-      gpa: (s.gpa || 0) * 10, // Normalize to 100-point scale
+      gpa: s.gpa || 0, // GPA is already stored as percentage (0-100)
       assignments: s.assignmentRate || 0,
       consistency: s.timeConsistency || 0,
       concepts: s.conceptScore || 0,
