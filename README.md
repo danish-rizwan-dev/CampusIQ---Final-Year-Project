@@ -4,7 +4,7 @@
 -->
 
 <div align="center">
-  <img src="./public/campusiq_banner.png" alt="CampusIQ Banner" width="100%" style="border-radius: 20px; max-height: 280px; object-fit: cover; margin-bottom: 20px;">
+  <img src="./public/campusiq_banner.png" alt="CampusIQ Banner" width="100%" ">
 
   # 🎓 CampusIQ
   ### *Transforming Academic Complexity into AI-Driven Clarity*
