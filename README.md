@@ -1,138 +1,109 @@
+<!--
+  CampusIQ - The AI Student Operating System
+  Simple. Elegant. Powerful.
+-->
+
 <div align="center">
-  <img src="./public/campusiq_banner.png" alt="CampusIQ Banner" width="100%">
+  <img src="./public/campusiq_banner.png" alt="CampusIQ Banner" width="100%" style="border-radius: 20px; margin-bottom: 20px;">
 
   # 🎓 CampusIQ
-  ### *The World's First Autonomous Student Operating System*
+  ### *Transforming Academic Complexity into AI-Driven Clarity*
 
-  [![Next.js](https://img.shields.io/badge/Next.js-16.2.3-black?logo=next.js&style=for-the-badge)](https://nextjs.org/)
-  [![Prisma](https://img.shields.io/badge/Prisma-7.7.0-2D3748?logo=prisma&style=for-the-badge)](https://www.prisma.io/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&style=for-the-badge)](https://tailwindcss.com/)
-  [![Google Gemini](https://img.shields.io/badge/AI-Google_Gemini-4285F4?logo=google-gemini&style=for-the-badge)](https://ai.google.dev/)
-  [![Clerk](https://img.shields.io/badge/Auth-Clerk-6C47FF?logo=clerk&style=for-the-badge)](https://clerk.com/)
+  [![Next.js](https://img.shields.io/badge/Next.js-16.2.3-black?logo=next.js&style=flat-square)](https://nextjs.org/)
+  [![React](https://img.shields.io/badge/React-19.2.4-61DAFB?logo=react&style=flat-square&logoColor=black)](https://react.dev/)
+  [![Prisma](https://img.shields.io/badge/Prisma-7.7.0-2D3748?logo=prisma&style=flat-square)](https://www.prisma.io/)
+  [![Google Gemini](https://img.shields.io/badge/AI-Gemini_1.5-4285F4?logo=google-gemini&style=flat-square)](https://ai.google.dev/)
+  [![Clerk](https://img.shields.io/badge/Auth-Clerk-6C47FF?logo=clerk&style=flat-square)](https://clerk.com/)
 
-  **CampusIQ** isn't just a dashboard; it's a precision-engineered engine for high-velocity learning. By leveraging **Google Gemini AI**, it architects your career from Semester 1 to CEO, replacing fragmented tools with a single neural interface.
+  **CampusIQ** is a premium, AI-powered academic operating system designed for modern students. It bridges the gap between curriculum and career by building an autonomous bridge from Semester 1 to your professional debut.
 
-  [Explore Modules](#-engine-modules) • [Tech Stack](#-technology-stack) • [Getting Started](#-getting-started) • [Architecture](#-project-structure)
+  [**Explore Features**](#-core-features) • [**Tech Stack**](#-tech-stack) • [**Setup Guide**](#-quick-start)
 </div>
 
 ---
 
-## 🚀 Engine Modules
+## 💎 The Platform Experience
 
-### 🧠 The 8-Semester Autopilot
-A living roadmap that re-calibrates every 24 hours based on your focus, energy levels, and upcoming deadlines.
-- **Curriculum Mapping**: Complete alignment with your university syllabus.
-- **Skill-Gap Analysis**: Identifies what you need to learn to land high-tier offers.
-- **Credit Tracking**: Real-time monitoring of your academic progress.
+### 🌌 Immersive Landing Page
+A high-fidelity entry point featuring a "Cyber-Nexus" aesthetic with dual-theme support.
+<div align="center">
+  <img src="./public/screenshots/landing_page_1777139480870.png" width="48%" alt="Landing Dark">
+  <img src="./public/screenshots/landing_page_light_1777139630164.png" width="48%" alt="Landing Light">
+</div>
 
-### 🛡️ Panic Protocol
-Emergency triage for exam season. When time is short, CampusIQ identifies high-yield topics and builds a laser-focused preparation strategy.
-- **High-Yield Extraction**: AI identifies the most important modules from your syllabus.
-- **Rapid Documentation**: Instant, exam-ready explanations for complex concepts.
-
-### 🤖 Cognitive Tutor
-Your AI specialized study companion that learns your weak spots and crafts custom drills to fix them.
-- **Subject Cube 3D**: An immersive navigation system for immersive learning.
-- **Explanation-First Approach**: Documents that focus on clarity and retention.
-
-### 💼 Career Synthesis
-Bridge the gap between passing exams and landing your dream role.
-- **Personalized Assessments**: Skills, interests, and salary goals integrated into career logic.
-- **Market Intel**: AI-driven recommendations based on real-time industry trends.
-
-### 📊 Attendance Guard & Time Sync
-- **Predictive Alerts**: Get notified before you hit the academic "danger zone."
-- **Adaptive Timetable**: A schedule that breathes with you and your changing priorities.
+### 🔑 Premium Authentication
+Re-engineered Sign-in/Sign-up flows with glassmorphism, native dark/light mode sync, and marketing-led onboarding.
+<div align="center">
+  <img src="./public/screenshots/signin_page_1777139500217.png" width="48%" alt="Signin Dark">
+  <img src="./public/screenshots/signin_page_light_1777139670356.png" width="48%" alt="Signin Light">
+</div>
 
 ---
 
-## 🛠️ Technology Stack
+## 🧠 Core Features
 
-| Layer | Technology |
+### 🚀 Intelligent Dashboard
+The centralized academic cockpit. Track your recent activity, latest mock scores, and overall readiness at a glance.
+<img src="./public/screenshots/dashboard_main_1777139732647.png" alt="Dashboard Hub" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
+
+### 📚 Syllabus Hub
+Upload your university syllabus (PDF/Image) and let Gemini AI extract subjects and topics into interactive glass-cards.
+<img src="./public/screenshots/syllabus_hub_1777139747802.png" alt="Syllabus Hub" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
+
+### 🛡️ Mock Exam Engine
+A professional 75-mark examination simulator. Features multiple sections (Objective, Short, Long) with AI-powered grading and a resilient local fallback engine.
+<img src="./public/screenshots/mock_exam_hub_1777139763004.png" alt="Mock Exam Engine" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
+
+### 📊 Performance Analytics
+Deep-dive into your academic data. Monitor subject mastery through heatmaps and track your mock exam history.
+<img src="./public/screenshots/analytics_page_1777139777716.png" alt="Analytics Cockpit" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
+
+---
+
+## 🛠️ Tech Stack
+
+Built with the latest bleeding-edge technologies for speed and reliability.
+
+| Category | Technology |
 | :--- | :--- |
-| **Frontend** | [Next.js 16](https://nextjs.org/) (App Router), [React 19](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/) |
-| **Backend** | Next.js API Routes (Edge Compatible) |
-| **Database** | [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/) |
-| **Artificial Intelligence** | [Google Gemini 3 Flash Preview](https://ai.google.dev/) |
-| **Authentication** | [Clerk](https://clerk.com/) |
-| **State Management** | [Zustand](https://zustand-demo.pmnd.rs/) |
-| **UI Components** | Radix UI, Lucide Icons, Sonner Toasts |
-| **Charts** | [Recharts](https://recharts.org/) |
+| **Framework** | **Next.js 16** (App Router & Server Actions) |
+| **Intelligence** | **Google Gemini 1.5 Flash** (Vision & Text) |
+| **Database** | **PostgreSQL** via **Prisma ORM** |
+| **Security** | **Clerk** (JWT-based Enterprise Auth) |
+| **UI Engine** | **Vanilla CSS & Framer Motion** (Glassmorphism) |
+| **State** | **Zustand** (Ultra-light reactive state) |
 
 ---
 
-## ⚙️ Getting Started
+## 🚀 Quick Start
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/danish-rizwan-dev/CampusIQ---Final-Year-Project.git
-cd CampusIQ---Final-Year-Project
-```
+Get CampusIQ running on your local machine in under 2 minutes.
 
-### 2. Install Dependencies
-```bash
-npm install
-```
+1.  **Clone & Install**
+    ```bash
+    git clone https://github.com/danish-rizwan-dev/CampusIQ.git
+    cd CampusIQ
+    npm install
+    ```
 
-### 3. Environment Setup
-Create a `.env` file in the root directory and add the following:
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/campusiq"
+2.  **Environment Setup**
+    Create a `.env` file with your **Clerk**, **Database**, and **Gemini** keys.
 
-# Clerk Auth
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
-CLERK_SECRET_KEY="sk_test_..."
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+3.  **Database Push**
+    ```bash
+    npx prisma db push
+    npm run db:seed
+    ```
 
-# Gemini AI
-GEMINI_API_KEY="your_gemini_api_key_here"
-```
-
-### 4. Database Initialization
-```bash
-npx prisma db push
-npm run db:seed
-```
-
-### 5. Launch the System
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) to initialize the OS.
-
----
-
-## 📂 Project Structure
-
-```bash
-src/
-├── app/               # Next.js App Router (Dashboard, Public, API)
-│   ├── (dashboard)/   # Core platform features (Analytics, AI, Career)
-│   ├── (auth)/        # Authentication routes
-│   └── api/           # Backend processing & AI handlers
-├── components/        # Reusable UI components & Layouts
-├── lib/               # Shared utilities (Gemini config, database)
-├── store/             # Zustand state management
-└── prisma/            # Database schema & seed scripts
-```
-
----
-
-## 🎨 Design Philosophy
-CampusIQ is built with a **Premium Glassmorphism** aesthetic. We prioritize:
-- **Visual Excellence**: Vibrant gradients and sleek dark mode.
-- **Micro-animations**: Smooth transitions that make the app feel alive.
-- **Immersive Navigation**: 3D elements and card-based layouts for an "App-like" feel.
+4.  **Run Development**
+    ```bash
+    npm run dev
+    ```
 
 ---
 
 <div align="center">
-  Master Your Academic Fate.
+  <b>Built for the ambitious. Engineered by Danish Rizwan.</b>
   <br />
-  Built with ❤️ by <b>Danish Rizwan</b>
-  <br />
-  <b>CampusIQ © 2026 • All Systems Operational</b>
+  CampusIQ © 2026 • Your Academic OS is Online.
 </div>
