@@ -4,7 +4,7 @@
 -->
 
 <div align="center">
-  <img src="./public/campusiq_banner.png" alt="CampusIQ Banner" width="100%" style="border-radius: 20px; margin-bottom: 20px;">
+  <img src="./public/campusiq_banner.png" alt="CampusIQ Banner" width="100%" style="border-radius: 20px; max-height: 280px; object-fit: cover; margin-bottom: 20px;">
 
   # 🎓 CampusIQ
   ### *Transforming Academic Complexity into AI-Driven Clarity*
@@ -22,17 +22,17 @@
 
 ---
 
-## 💎 The Platform Experience
+## 🛸 The Platform Experience
 
-### 🌌 Immersive Landing Page
-A high-fidelity entry point featuring a "Cyber-Nexus" aesthetic with dual-theme support.
+### 🌌 Universal Landing Page
+A high-fidelity entry point featuring a "Cyber-Nexus" aesthetic with seamless dual-theme transitions.
 <div align="center">
   <img src="./public/screenshots/landing_page_1777139480870.png" width="48%" alt="Landing Dark">
   <img src="./public/screenshots/landing_page_light_1777139630164.png" width="48%" alt="Landing Light">
 </div>
 
-### 🔑 Premium Authentication
-Re-engineered Sign-in/Sign-up flows with glassmorphism, native dark/light mode sync, and marketing-led onboarding.
+### 🔑 Secure Authentication
+Glassmorphic Sign-in/Sign-up flows with native theme synchronization and marketing-led onboarding.
 <div align="center">
   <img src="./public/screenshots/signin_page_1777139500217.png" width="48%" alt="Signin Dark">
   <img src="./public/screenshots/signin_page_light_1777139670356.png" width="48%" alt="Signin Light">
@@ -40,44 +40,83 @@ Re-engineered Sign-in/Sign-up flows with glassmorphism, native dark/light mode s
 
 ---
 
-## 🧠 Core Features
+## ⚙️ Core Engine
 
-### 🚀 Intelligent Dashboard
-The centralized academic cockpit. Track your recent activity, latest mock scores, and overall readiness at a glance.
+### 🔋 Intelligence Cockpit
+The centralized dashboard to track activity, latest mock scores, and overall readiness at a glance.
 <img src="./public/screenshots/dashboard_main_1777139732647.png" alt="Dashboard Hub" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
 
-### 📚 Syllabus Hub
-Upload your university syllabus (PDF/Image) and let Gemini AI extract subjects and topics into interactive glass-cards.
+### 🧠 8-Semester Autopilot
+A living academic roadmap that re-calibrates based on career goals, bridging the gap to industry-ready skills.
+<div align="center">
+  <img src="./public/screenshots/roadmap_overview_1777140676189.png" width="48%" alt="Roadmap Overview">
+  <img src="./public/screenshots/roadmap_detailed_timeline_1777140705086.png" width="48%" alt="Detailed Timeline">
+</div>
+<br/>
+
+### 📁 Syllabus Hub
+Multimodal subject extraction—upload your syllabus and let Gemini AI generate interactive academic cards.
 <img src="./public/screenshots/syllabus_hub_1777139747802.png" alt="Syllabus Hub" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
 
-### 🛡️ Mock Exam Engine
-A professional 75-mark examination simulator. Features multiple sections (Objective, Short, Long) with AI-powered grading and a resilient local fallback engine.
+### 🛡️ Exam Simulator
+A professional 75-mark simulator featuring AI grading and a resilient local fallback engine.
 <img src="./public/screenshots/mock_exam_hub_1777139763004.png" alt="Mock Exam Engine" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
 
-### 📊 Performance Analytics
-Deep-dive into your academic data. Monitor subject mastery through heatmaps and track your mock exam history.
+### 📈 Global Analytics
+Deep-dive into subject mastery through heatmaps and track your complete mock examination history.
 <img src="./public/screenshots/analytics_page_1777139777716.png" alt="Analytics Cockpit" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
+
+---
+
+## 🎨 Component Showcase
+
+Individual UI building blocks engineered for visual excellence.
+
+<div align="center">
+  <table border="0">
+    <tr>
+      <td width="50%">
+        <strong>Telemetry Cockpit</strong><br/>
+        <img src="./public/screenshots/dashboard_stats_bar_1777140143425.png" width="100%"><br/>
+        <em>Real-time monitoring of academic vigor.</em>
+      </td>
+      <td width="50%">
+        <strong>Subject Selector</strong><br/>
+        <img src="./public/screenshots/quick_generate_grid_1777140202532.png" width="100%"><br/>
+        <em>Instant generation grid.</em>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%">
+        <strong>Heatmap Analytics</strong><br/>
+        <img src="./public/screenshots/subject_breakdown_chart_1777140175215.png" width="100%"><br/>
+        <em>Visual mastery mapping.</em>
+      </td>
+      <td width="50%">
+        <strong>Focus Answering</strong><br/>
+        <img src="./public/screenshots/mock_exam_question_box_detail_1777140357782.png" width="100%"><br/>
+        <em>Distraction-free environment.</em>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ---
 
 ## 🛠️ Tech Stack
 
-Built with the latest bleeding-edge technologies for speed and reliability.
-
-| Category | Technology |
+| Layer | Technology |
 | :--- | :--- |
-| **Framework** | **Next.js 16** (App Router & Server Actions) |
-| **Intelligence** | **Google Gemini 1.5 Flash** (Vision & Text) |
-| **Database** | **PostgreSQL** via **Prisma ORM** |
-| **Security** | **Clerk** (JWT-based Enterprise Auth) |
-| **UI Engine** | **Vanilla CSS & Framer Motion** (Glassmorphism) |
-| **State** | **Zustand** (Ultra-light reactive state) |
+| **Framework** | **Next.js 16** (App Router) |
+| **Intelligence** | **Google Gemini 1.5 Flash** |
+| **Database** | **PostgreSQL** via **Prisma** |
+| **Security** | **Clerk** (Enterprise Auth) |
+| **UI Engine** | **Vanilla CSS & Framer Motion** |
+| **State** | **Zustand** |
 
 ---
 
-## 🚀 Quick Start
-
-Get CampusIQ running on your local machine in under 2 minutes.
+## 🚀 Getting Started
 
 1.  **Clone & Install**
     ```bash
@@ -86,17 +125,11 @@ Get CampusIQ running on your local machine in under 2 minutes.
     npm install
     ```
 
-2.  **Environment Setup**
-    Create a `.env` file with your **Clerk**, **Database**, and **Gemini** keys.
-
-3.  **Database Push**
+2.  **Initialize**
+    Create `.env` with your keys, then run:
     ```bash
     npx prisma db push
     npm run db:seed
-    ```
-
-4.  **Run Development**
-    ```bash
     npm run dev
     ```
 
