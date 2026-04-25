@@ -55,6 +55,7 @@ model User {
   sessions         Session[]
   syllabusTopics   SyllabusTopic[]
   tasks            Task[]
+  mockExams        MockExam[]
 }
 
 model CareerProfile {
@@ -160,6 +161,22 @@ model SyllabusTopic {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MockExam {
+  id              String   @id @default(cuid())
+  userId          String
+  subject         String
+  syllabus        String?
+  examData        Json
+  results         Json?
+  score           Int?
+  totalMarks      Int?     @default(35)
+  durationMinutes Int?     @default(60)
+  status          String   @default("PENDING")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

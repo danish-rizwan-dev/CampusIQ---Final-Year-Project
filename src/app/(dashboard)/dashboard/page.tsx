@@ -4,7 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { 
   CheckCircle, Clock, TrendingUp, Calendar, 
   Loader2, ChevronRight, Target, Activity,
-  GraduationCap, BookOpen, Sparkles
+  GraduationCap, BookOpen, Sparkles, Zap, Shield, Brain, MessageSquare
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -19,38 +19,44 @@ export default function Dashboard() {
     tasksDue: 0,
     attendanceAvg: 0,
     careerProgress: 0,
-    insight: "Gathering your latest academic updates..."
+    mockReadiness: 0,
+    latestMock: null as any,
+    insight: "Synthesizing your academic trajectory..."
   });
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
 
   useEffect(() => {
     async function fetchDashboardData() {
       try {
-        const [userRes, taskRes] = await Promise.all([
+        const [userRes, taskRes, analyticsRes] = await Promise.all([
           fetch('/api/user/me'),
-          fetch('/api/tasks')
+          fetch('/api/tasks'),
+          fetch('/api/analytics/summary')
         ]);
         
         const userData = await userRes.json();
         const tasksData = await taskRes.json();
+        const analyticsData = await analyticsRes.json();
 
         const activeRoadmap = userData.user?.roadmaps.find((r: any) => r.status === 'ACTIVE');
         const pendingTasks = tasksData.tasks?.filter((t: any) => t.status === 'PENDING') || [];
         
-        setTasks(pendingTasks.slice(0, 3));
+        setTasks(pendingTasks.slice(0, 4));
         setStats({
           activeSemester: activeRoadmap?.semesterNumber || 0,
           tasksDue: pendingTasks.length,
           attendanceAvg: 92,
           careerProgress: userData.user?.careerProfile?.careerReadinessScore || 0,
+          mockReadiness: analyticsData.latest?.mock || 0,
+          latestMock: analyticsData.mockExams?.[0] || null,
           insight: activeRoadmap 
-            ? `You're currently in Semester ${activeRoadmap.semesterNumber}. You have ${pendingTasks.length} tasks that need your attention.`
-            : "Welcome! Let's start by setting up your academic roadmap for the semester."
+            ? `Everything looks good. You are in Semester ${activeRoadmap.semesterNumber}. You have ${pendingTasks.length} tasks to complete.`
+            : "Welcome! Create your first study plan to get started."
         });
       } catch (error) {
-        toast.error("Neural sync failed. Using cached data.");
+        toast.error("Telemetry link failed. Using offline cache.");
       } finally {
         setLoading(false);
       }
@@ -61,125 +67,159 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div style={{ display: 'flex', height: '80vh', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-        <Loader2 size={40} style={{ animation: 'spin 2s linear infinite', color: 'var(--accent)' }} />
-        <p style={{ letterSpacing: '2px', fontSize: '0.8rem', fontWeight: 'bold', opacity: 0.6 }}>LOADING EXPERIENCE</p>
+        <div className="neon-border" style={{ padding: '20px', borderRadius: '50%' }}>
+          <Loader2 size={40} className="spin" color="var(--accent-neon)" />
+        </div>
+        <p style={{ letterSpacing: '4px', fontSize: '0.7rem', fontWeight: '900', color: 'var(--accent-neon)' }}>LOADING...</p>
       </div>
     );
   }
 
   return (
-    <div className="fade-in-up" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', position: 'relative' }}>
       
-      {/* --- HERO SECTION (Using your Bento styles) --- */}
-      <header className="bento-card" style={{ 
-        background: 'linear-gradient(135deg, var(--accent-glow) 0%, transparent 100%)',
+      {/* --- COMMAND HEADER --- */}
+      <header className="bento-card neon-border" style={{ 
+        padding: '1.5rem 2rem',
+        background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--accent-glow) 100%)',
+        overflow: 'hidden',
         position: 'relative'
       }}>
-        <div className="page-header" style={{ position: 'relative', zIndex: 1 }}>
-          <div>
-            <p style={{ fontSize: '0.7rem', fontWeight: '800', letterSpacing: '1.5px', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>OVERVIEW</p>
-            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, lineHeight: 1.1, margin: 0 }}>
-              {greeting}, <br /><span className="gradient-text">{user?.firstName || 'Scholar'}</span>
-            </h1>
+        <div className="scan-line" />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
+            <div style={{ width: '8px', height: '8px', background: 'var(--accent-neon)', borderRadius: '2px' }} />
+            <span style={{ fontSize: '0.7rem', fontWeight: '900', letterSpacing: '2px', color: 'var(--accent-neon)' }}>DASHBOARD</span>
           </div>
-          <div className="stack-on-mobile" style={{ marginTop: '1rem' }}>
-            <Link href="/dashboard/roadmap" className="btn-secondary" style={{ textDecoration: 'none' }}>
-              My Roadmap
+          <h1 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.4rem)', fontWeight: 950, lineHeight: 1, letterSpacing: '-0.04em', margin: 0 }}>
+            {greeting}, <span className="shimmer-text">{user?.firstName || 'STUDENT'}</span>
+          </h1>
+          
+          <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <Link href="/dashboard/roadmap" className="btn-primary" style={{ borderRadius: '8px', padding: '10px 20px', fontSize: '0.85rem' }}>
+              VIEW STUDY PLAN
             </Link>
-            <Link href="/dashboard/exam" className="btn-primary" style={{ textDecoration: 'none' }}>
-              Exam Mode <ChevronRight size={18} />
+            <Link href="/dashboard/exam" className="btn-secondary" style={{ borderRadius: '8px', border: '1px solid var(--accent-neon)', color: 'var(--accent-neon)', padding: '10px 20px', fontSize: '0.85rem' }}>
+              EXAM PREP
             </Link>
           </div>
         </div>
+        
+        {/* Abstract background icon */}
+        <Shield size={300} color="var(--accent)" style={{ position: 'absolute', right: '-50px', bottom: '-50px', opacity: 0.03, pointerEvents: 'none' }} />
       </header>
 
-      {/* --- STATS GRID (Using your responsive-grid utility) --- */}
-      <div className="responsive-grid">
+      {/* --- TELEMETRY GRID --- */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
         {[
-          { label: 'SEMESTER', val: stats.activeSemester || '—', icon: <GraduationCap />, color: 'var(--accent)' },
-          { label: 'TASKS DUE', val: stats.tasksDue, icon: <Clock />, color: 'var(--warning)' },
-          { label: 'ATTENDANCE', val: `${stats.attendanceAvg}%`, icon: <TrendingUp />, color: 'var(--success)' },
-          { label: 'READINESS', val: `${Math.round(stats.careerProgress)}%`, icon: <Target />, color: '#8b5cf6' },
+          { label: 'SEMESTER', val: stats.activeSemester || '—', icon: <GraduationCap size={20} />, color: 'var(--accent-neon)' },
+          { label: 'PENDING TASKS', val: stats.tasksDue, icon: <Activity size={20} />, color: 'var(--warning)' },
+          { label: 'ATTENDANCE', val: `${stats.attendanceAvg}%`, icon: <Zap size={20} />, color: 'var(--success)' },
+          { label: 'MOCK READINESS', val: `${Math.round(stats.mockReadiness)}%`, icon: <Brain size={20} />, color: 'var(--accent-neon)' },
         ].map((s, i) => (
-          <div key={i} className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-            <div style={{ color: s.color, background: 'var(--bg-primary)', padding: '10px', borderRadius: '12px' }}>
-              {s.icon}
+          <div key={i} className="glass-card" style={{ borderLeft: `4px solid ${s.color}`, padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+               <span style={{ color: s.color }}>{s.icon}</span>
+               <span style={{ fontSize: '0.6rem', fontWeight: '900', color: 'var(--text-muted)', letterSpacing: '1px' }}>{s.label}</span>
             </div>
-            <div>
-              <p style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-secondary)', letterSpacing: '1px' }}>{s.label}</p>
-              <h3 style={{ fontSize: '1.4rem', margin: 0, fontWeight: '800' }}>{s.val}</h3>
-            </div>
+            <h3 style={{ fontSize: '2rem', fontWeight: '950', margin: 0, fontFamily: 'inherit' }}>{s.val}</h3>
           </div>
         ))}
       </div>
 
-      {/* --- MAIN LAYOUT (Using your asymmetric grid) --- */}
-      <div className="responsive-grid-wide">
+      {/* --- MAIN INTERFACE --- */}
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }} className="stack-on-mobile">
         
-        {/* Left: Progress & Insights */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div className="bento-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              <Sparkles size={22} className="gradient-text" style={{ WebkitTextFillColor: 'unset', color: 'var(--accent)' }} />
-              <h2 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0 }}>Academic Insight</h2>
+        {/* Left Col: Insights & Progress */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <section className="bento-card" style={{ padding: '2.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+              <Brain size={24} color="var(--accent-neon)" />
+              <h2 style={{ fontSize: '1.5rem', fontWeight: '900', margin: 0 }}>DAILY UPDATES</h2>
             </div>
             
-            <div style={{ background: 'var(--accent-glow)', padding: '1.5rem', borderRadius: '16px', borderLeft: '4px solid var(--accent)', marginBottom: '2rem' }}>
-              <p style={{ fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-primary)', margin: 0 }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)', position: 'relative' }}>
+              <p style={{ fontSize: '1.2rem', lineHeight: 1.6, color: 'var(--text-primary)' }}>
                 "{stats.insight}"
               </p>
             </div>
 
-            <div className="responsive-grid-2">
-              <Link href="/dashboard/assistant" className="btn-primary" style={{ textDecoration: 'none', justifyContent: 'center' }}>Open Assistant</Link>
-              <Link href="/dashboard/syllabus" className="btn-secondary" style={{ textDecoration: 'none', justifyContent: 'center' }}>Scan Syllabus</Link>
+            <div style={{ marginTop: '3rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: '900', letterSpacing: '1px' }}>CAREER PROGRESS</span>
+                <span style={{ color: 'var(--accent-neon)', fontWeight: '900' }}>{Math.round(stats.careerProgress)}%</span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                <div style={{ 
+                  width: `${stats.careerProgress}%`, 
+                  height: '100%', 
+                  background: 'var(--accent-gradient)', 
+                  transition: 'width 2s cubic-bezier(0.16, 1, 0.3, 1)' 
+                }} />
+              </div>
             </div>
-          </div>
 
-          <div className="glass-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
-            <div>
-              <h4 style={{ margin: 0 }}>Career Readiness</h4>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Skill-gap analysis score</p>
-            </div>
-            <div style={{ flex: 1, minWidth: '150px', height: '10px', background: 'var(--border)', borderRadius: '10px', overflow: 'hidden' }}>
-              <div style={{ width: `${stats.careerProgress}%`, height: '100%', background: 'var(--accent)', transition: 'width 1s ease' }} />
-            </div>
-            <span style={{ fontWeight: '800', color: 'var(--accent)' }}>{Math.round(stats.careerProgress)}%</span>
-          </div>
-        </section>
-
-        {/* Right: Task Sidebar */}
-        <aside className="bento-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: '800', margin: 0 }}>
-              <Activity size={18} color="var(--accent)" /> Priority List
-            </h3>
-            <span style={{ fontSize: '0.65rem', fontWeight: '800', padding: '4px 12px', background: 'var(--accent-glow)', borderRadius: '20px', color: 'var(--accent)' }}>
-              {tasks.length} ACTIVE
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {tasks.length > 0 ? tasks.map((t, i) => (
-              <div key={i} className="task-row">
-                <div style={{ width: '4px', height: '24px', borderRadius: '4px', background: t.priority === 'HIGH' ? 'var(--danger)' : 'var(--accent)' }} />
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: '0.9rem', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}>{t.title}</p>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{t.type}</p>
+            {stats.latestMock && (
+              <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p style={{ margin: 0, fontSize: '0.6rem', fontWeight: 900, color: 'var(--accent-neon)', letterSpacing: '1px' }}>LATEST MOCK SCORE</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '1rem', fontWeight: 900 }}>{stats.latestMock.subject}</p>
                 </div>
-                <ChevronRight size={14} style={{ opacity: 0.3 }} />
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 950, color: stats.latestMock.score >= 40 ? 'var(--success)' : 'var(--danger)' }}>{Math.round(stats.latestMock.score)}%</p>
+                  <p style={{ margin: 0, fontSize: '0.6rem', fontWeight: 900, opacity: 0.5 }}>{new Date(stats.latestMock.date).toLocaleDateString()}</p>
+                </div>
+              </div>
+            )}
+          </section>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+             <Link href="/dashboard/assistant" className="glass-card glass-card-hoverable" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem' }}>
+                <MessageSquare size={20} color="var(--accent-neon)" />
+                <span style={{ fontWeight: '800', fontSize: '0.9rem' }}>CHAT WITH AI</span>
+             </Link>
+             <Link href="/dashboard/syllabus" className="glass-card glass-card-hoverable" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem' }}>
+                <BookOpen size={20} color="var(--accent-secondary)" />
+                <span style={{ fontWeight: '800', fontSize: '0.9rem' }}>UPLOAD SYLLABUS</span>
+             </Link>
+          </div>
+        </div>
+
+        {/* Right Col: Task Queue */}
+        <aside className="bento-card" style={{ padding: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+             <h3 style={{ fontSize: '1.2rem', fontWeight: '900', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Activity size={18} color="var(--accent-neon)" /> TASKS
+             </h3>
+             <div style={{ width: '40px', height: '1px', background: 'var(--border)' }} />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {tasks.length > 0 ? tasks.map((t, i) => (
+              <div key={i} className="task-node">
+                <div style={{ 
+                  width: '8px', 
+                  height: '8px', 
+                  borderRadius: '50%', 
+                  background: t.priority === 'HIGH' ? 'var(--danger)' : 'var(--accent-neon)'
+                }} />
+                <div style={{ flex: 1 }}>
+                   <p style={{ fontSize: '0.85rem', fontWeight: '800', color: 'var(--text-primary)' }}>{t.title}</p>
+                   <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>{t.type} // {t.priority} PRIORITY</p>
+                </div>
+                <ChevronRight size={14} opacity={0.3} />
               </div>
             )) : (
-              <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-                <CheckCircle size={32} style={{ color: 'var(--success)', opacity: 0.3, marginBottom: '0.5rem' }} />
-                <p style={{ fontSize: '0.85rem' }}>Schedule is clear.</p>
+              <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+                <CheckCircle size={40} color="var(--success)" opacity={0.2} />
+                <p style={{ fontSize: '0.7rem', fontWeight: '900', marginTop: '1rem', color: 'var(--text-muted)' }}>ALL DONE!</p>
               </div>
             )}
           </div>
 
-          <Link href="/dashboard/timetable" style={{ textDecoration: 'none' }}>
-            <button className="btn-secondary" style={{ width: '100%', marginTop: '1.5rem', fontSize: '0.8rem' }}>
-              Full Schedule
+          <Link href="/dashboard/timetable" style={{ marginTop: '2.5rem', display: 'block' }}>
+            <button className="btn-secondary" style={{ width: '100%', fontSize: '0.7rem', fontWeight: '900', letterSpacing: '2px', border: '1px dashed var(--border)' }}>
+              VIEW FULL SCHEDULE
             </button>
           </Link>
         </aside>
@@ -187,27 +227,19 @@ export default function Dashboard() {
       </div>
 
       <style jsx>{`
-        .task-row {
+        .task-node {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          padding: 0.75rem 1rem;
-          background: var(--bg-primary);
-          border-radius: 12px;
+          gap: 1.25rem;
+          padding: 1rem;
+          background: rgba(255, 255, 255, 0.02);
           border: 1px solid var(--border);
-          transition: all 0.2s ease;
+          transition: 0.3s;
           cursor: pointer;
         }
-
-        .task-row:hover {
-          border-color: var(--accent);
+        .task-node:hover {
+          background: rgba(255, 255, 255, 0.04);
           transform: translateX(4px);
-          background: var(--bg-secondary);
-        }
-
-        /* Ensuring link underlines are gone everywhere */
-        :global(a) {
-          text-decoration: none !important;
         }
       `}</style>
     </div>

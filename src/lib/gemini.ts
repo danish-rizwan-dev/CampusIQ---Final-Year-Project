@@ -130,6 +130,184 @@ Provide YouTube search links for every important topic and revision day focus.`;
   }
 }
 
+export async function generateMockExam(subject: string, syllabus: string) {
+  if (!apiKey) return null;
+
+  const prompt = `You are an expert Professor. Generate a high-stakes 75-MARK MOCK EXAM for the subject: ${subject}.
+Syllabus Context: ${syllabus}
+
+EXAM STRUCTURE (TOTAL 75 MARKS):
+1. Section A: 10 Short Answer Questions - 2 marks each (20 marks total).
+2. Section B: 5 Multiple Choice Questions (MCQs) - 1 mark each (5 marks total).
+3. Section C: 6 Long/Detailed Questions - 12.5 marks each. (Student must ATTEMPT ANY 4 out of these 6 to make up 50 marks total).
+
+Respond ONLY in JSON matching this schema:
+{
+  "examTitle": "string",
+  "subject": "string",
+  "totalMarks": 75,
+  "durationMinutes": 180,
+  "sections": [
+    {
+      "sectionName": "string",
+      "instructions": "string (e.g., Attempt any 4 out of 6)",
+      "questions": [
+        {
+          "id": "string",
+          "type": "MCQ" | "SHORT" | "DETAILED",
+          "question": "string",
+          "options": ["string"], (only if type is MCQ)
+          "correctAnswer": "string", (only if type is MCQ)
+          "markingCriteria": "string", (only if type is SHORT/DETAILED)
+          "marks": number
+        }
+      ]
+    }
+  ]
+}`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    return JSON.parse(result.response.text());
+  } catch (error) {
+    console.error("Mock Exam AI Error:", error);
+    return getMockExam(subject);
+  }
+}
+
+export async function gradeMockExam(examData: any, userAnswers: any) {
+  if (!apiKey) return null;
+
+  const prompt = `You are an expert Professor grading an exam.
+EXAM DATA: ${JSON.stringify(examData)}
+USER ANSWERS: ${JSON.stringify(userAnswers)}
+
+TASK:
+1. For Section A (MCQs): Compare user answer with correct answer. 1 mark if correct, 0 otherwise.
+2. For Section B (DETAILED): Evaluate the user's answer based on the marking criteria. Award marks (0 to 5) based on depth, accuracy, and logic.
+3. Provide a final score.
+4. Provide constructive feedback for the student.
+
+Respond ONLY in JSON matching this schema:
+{
+  "score": number,
+  "totalMarks": number,
+  "feedback": "string",
+  "questionResults": [
+    {
+      "id": "string",
+      "marksAwarded": number,
+      "feedback": "string"
+    }
+  ]
+}`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    return JSON.parse(result.response.text());
+  } catch (error) {
+    console.error("Mock Exam Grading Error (Falling back to local grading):", error);
+    return getMockGrading(examData, userAnswers);
+  }
+}
+
+function getMockGrading(examData: any, userAnswers: any) {
+  let totalScore = 0;
+  let totalAvailableMarks = 0;
+  const questionResults: any[] = [];
+
+  examData.sections.forEach((section: any) => {
+    section.questions.forEach((q: any) => {
+      totalAvailableMarks += q.marks;
+      const userAnswer = userAnswers[q.id];
+      let marksAwarded = 0;
+      let feedback = "";
+
+      if (!userAnswer) {
+        feedback = "No answer provided.";
+      } else if (q.type === 'MCQ') {
+        if (userAnswer === q.correctAnswer) {
+          marksAwarded = q.marks;
+          feedback = "Correct.";
+        } else {
+          feedback = `Incorrect. Correct answer: ${q.correctAnswer}`;
+        }
+      } else {
+        // Fallback for subjective: give 60-80% marks if they wrote something substantial
+        const wordCount = userAnswer.trim().split(/\s+/).length;
+        if (wordCount > 50) {
+          marksAwarded = Math.floor(q.marks * 0.75);
+          feedback = "Good depth of explanation. Local evaluation applied.";
+        } else if (wordCount > 10) {
+          marksAwarded = Math.floor(q.marks * 0.5);
+          feedback = "Brief explanation provided. Local evaluation applied.";
+        } else {
+          marksAwarded = Math.floor(q.marks * 0.2);
+          feedback = "Answer is too short. Local evaluation applied.";
+        }
+      }
+
+      totalScore += marksAwarded;
+      questionResults.push({
+        id: q.id,
+        marksAwarded,
+        feedback
+      });
+    });
+  });
+
+  return {
+    score: totalScore,
+    totalMarks: totalAvailableMarks,
+    feedback: "Exam successfully evaluated. Focus on the detailed feedback for each question to improve your score.",
+    questionResults
+  };
+}
+
+function getMockExam(subject: string) {
+  return {
+    examTitle: `Mock Exam: ${subject}`,
+    subject: subject,
+    totalMarks: 35,
+    durationMinutes: 60,
+    sections: [
+      {
+        sectionName: "Section A: Objective",
+        questions: [
+          {
+            id: "mcq_1",
+            type: "MCQ",
+            question: `Which of the following is a core concept of ${subject}?`,
+            options: ["Option A", "Option B", "Option C", "Option D"],
+            correctAnswer: "Option A",
+            marks: 1
+          },
+          {
+            id: "mcq_2",
+            type: "MCQ",
+            question: `In the context of ${subject}, what does 'X' typically represent?`,
+            options: ["Variable", "Constant", "Function", "Module"],
+            correctAnswer: "Variable",
+            marks: 1
+          }
+        ]
+      },
+      {
+        sectionName: "Section B: Subjective",
+        questions: [
+          {
+            id: "det_1",
+            type: "DETAILED",
+            question: `Explain the fundamental principles of ${subject} and their real-world applications.`,
+            markingCriteria: "Clarity, technical accuracy, and relevant examples.",
+            marks: 5
+          }
+        ]
+      }
+    ]
+  };
+}
+
 function getMockInitialRoadmap() {
   const weeks = Array.from({ length: 24 }, (_, i) => ({
     week: i + 1,

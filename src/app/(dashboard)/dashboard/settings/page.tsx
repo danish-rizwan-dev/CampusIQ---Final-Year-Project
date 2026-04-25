@@ -36,8 +36,8 @@ export default function Settings() {
       
       {/* --- HEADER --- */}
       <header>
-        <h1 className="gradient-text" style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>System Configuration</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Manage your Neural OS identity and preferences.</p>
+        <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>Settings</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem' }}>Manage your account preferences and theme.</p>
       </header>
 
       {/* --- PROFILE SECTION --- */}
@@ -127,7 +127,7 @@ export default function Settings() {
                 style={{ background: 'var(--danger)', color: '#fff', borderRadius: '12px', border: 'none' }}
                 onClick={() => signOut({ redirectUrl: '/' })}
             >
-                Deactivate System
+                Logout Session
             </button>
         </div>
       </section>

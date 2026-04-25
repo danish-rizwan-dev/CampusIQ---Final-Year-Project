@@ -4,17 +4,18 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Map, BookOpen, MessageSquare,
-  AlertTriangle, Calendar, BarChart, Settings, LogOut, GraduationCap, X, Sparkles, Activity, ShieldCheck
+  AlertTriangle, Calendar, BarChart, Settings, LogOut, GraduationCap, X, Sparkles, Activity, ShieldCheck, FileText
 } from 'lucide-react';
 import { useClerk } from '@clerk/nextjs';
 
 const links = [
   { name: 'Overview', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Roadmap', path: '/dashboard/roadmap', icon: Map, hot: true },
-  { name: 'Career Tracker', path: '/dashboard/career', icon: Activity },
+  { name: 'Study Plan', path: '/dashboard/roadmap', icon: Map, hot: true },
+  { name: 'Career Path', path: '/dashboard/career', icon: Activity },
   { name: 'Syllabus Hub', path: '/dashboard/syllabus', icon: BookOpen },
   { name: 'AI Assistant', path: '/dashboard/assistant', icon: MessageSquare },
-  { name: 'Exam Arena', path: '/dashboard/exam', icon: AlertTriangle },
+  { name: 'Exam Prep', path: '/dashboard/exam', icon: AlertTriangle },
+  { name: 'Mock Exam', path: '/dashboard/mock-exam', icon: FileText },
   { name: 'Class Schedule', path: '/dashboard/timetable', icon: Calendar },
   { name: 'Performance', path: '/dashboard/analytics', icon: BarChart },
   { name: 'Settings', path: '/dashboard/settings', icon: Settings },
@@ -28,8 +29,6 @@ export default function Sidebar({ mobileOpen, onClose }: { mobileOpen: boolean; 
     <aside style={{
       width: '280px',
       background: 'var(--glass-bg)',
-      backdropFilter: 'blur(40px)',
-      WebkitBackdropFilter: 'blur(40px)',
       display: 'flex',
       flexDirection: 'column',
       height: 'calc(100vh - 2rem)',
@@ -48,10 +47,10 @@ export default function Sidebar({ mobileOpen, onClose }: { mobileOpen: boolean; 
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div className="float-anim" style={{
             width: '42px', height: '42px', borderRadius: '12px',
-            background: 'linear-gradient(135deg, var(--accent) 0%, #a855f7 100%)',
+            background: 'var(--accent-gradient)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 8px 20px var(--accent-glow)',
-            border: '1px solid rgba(255,255,255,0.2)'
+            boxShadow: 'var(--glow-shadow)',
+            border: '1px solid var(--border-bright)'
           }}>
             <GraduationCap size={22} color="white" />
           </div>
@@ -87,17 +86,17 @@ export default function Sidebar({ mobileOpen, onClose }: { mobileOpen: boolean; 
                 borderRadius: '14px',
                 fontSize: '0.9rem',
                 fontWeight: isActive ? '700' : '600',
-                color: isActive ? '#fff' : 'var(--text-primary)',
-                background: isActive ? 'var(--accent)' : 'transparent',
+                color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                background: isActive ? 'var(--accent-glow)' : 'transparent',
                 transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                border: '1px solid transparent',
+                border: isActive ? '1px solid var(--accent)' : '1px solid transparent',
                 position: 'relative'
               }}
             >
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <Icon size={18} style={{
                   opacity: isActive ? 1 : 0.6,
-                  color: isActive ? '#fff' : 'inherit'
+                  color: isActive ? 'var(--accent-neon)' : 'inherit'
                 }} />
                 {hot && !isActive && <div style={{ position: 'absolute', top: -4, right: -4, width: '6px', height: '6px', background: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 8px var(--accent)' }} />}
               </div>
@@ -116,10 +115,10 @@ export default function Sidebar({ mobileOpen, onClose }: { mobileOpen: boolean; 
             width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
             padding: '0.75rem', background: 'transparent', border: 'none',
             cursor: 'pointer', fontSize: '0.85rem', fontWeight: '700',
-            color: 'red', transition: '0.3s',
+            color: 'var(--danger)', transition: '0.3s',
           }}
         >
-          <LogOut size={16} color='red'/>
+          <LogOut size={16} color='var(--danger)' />
           Logout Session
         </button>
       </div>
@@ -163,8 +162,9 @@ export default function Sidebar({ mobileOpen, onClose }: { mobileOpen: boolean; 
             right: 12px;
             width: 4px;
             height: 14px;
-            background: rgba(255,255,255,0.5);
+            background: var(--accent-neon);
             border-radius: 2px;
+            box-shadow: 0 0 10px var(--accent-neon);
         }
 
         .signout-hover:hover {

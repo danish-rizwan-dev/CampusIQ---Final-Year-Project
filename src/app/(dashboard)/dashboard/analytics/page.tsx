@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  TrendingUp, TrendingDown, Target, Brain, Award, Loader2, 
+import {
+  TrendingUp, TrendingDown, Target, Brain, Award, Loader2,
   BarChart3, Info, Activity, AlertTriangle, Calendar, HelpCircle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, 
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer
 } from 'recharts';
 
@@ -63,7 +63,7 @@ export default function Analytics() {
           <p style={{ color: 'var(--text-secondary)', maxWidth: '500px', margin: '0 auto 2rem' }}>
             Complete your first semester evaluation and generate a roadmap to see advanced performance tracking and AI-driven growth metrics.
           </p>
-          <button className="btn-primary" onClick={() => window.location.href='/dashboard/roadmap'}>Start Your Roadmap</button>
+          <button className="btn-primary" onClick={() => window.location.href = '/dashboard/roadmap'}>Start Your Roadmap</button>
         </div>
       </div>
     );
@@ -87,8 +87,8 @@ export default function Analytics() {
     <div className="fade-in" style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem', paddingBottom: '4rem' }}>
       <header className="page-header" style={{ alignItems: 'flex-start' }}>
         <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: 0 }}>Academic Intelligence</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '0.5rem' }}>Precision performance tracking & growth monitoring.</p>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: 0 }}>Performance</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '0.5rem' }}>Track your grades and see how you're growing.</p>
         </div>
         <div style={{ background: 'var(--bg-secondary)', padding: '0.5rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', fontWeight: '600' }}>
           <Calendar size={16} color="var(--accent)" /> <span>2026-27</span>
@@ -107,7 +107,7 @@ export default function Analytics() {
               {trend.change}%
             </div>
           </div>
-          <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Overall Score</h3>
+          <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Your Score</h3>
           <p style={{ margin: '0.25rem 0 0', fontSize: '2rem', fontWeight: '900' }}>{Math.round(latest.score)}<span style={{ fontSize: '1rem', opacity: 0.4 }}>/100</span></p>
         </div>
 
@@ -137,7 +137,7 @@ export default function Analytics() {
         <div className="glass-card" style={{ padding: 'clamp(1rem, 5vw, 2.5rem)', borderRadius: '24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
             <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem' }}>
-              <BarChart3 size={18} color="var(--accent)" /> Academic Trajectory
+              <BarChart3 size={18} color="var(--accent)" /> Grade History
             </h3>
           </div>
           <div style={{ height: '300px', width: '100%' }}>
@@ -145,8 +145,8 @@ export default function Analytics() {
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="var(--accent)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--accent)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
@@ -163,10 +163,10 @@ export default function Analytics() {
         <div className="glass-card" style={{ padding: 'clamp(1rem, 5vw, 2.5rem)', borderRadius: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
             <h2 style={{ margin: 0, fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Award size={20} color="var(--success)" /> Metric Breakdown
+              <Award size={20} color="var(--success)" /> Subject Breakdown
             </h2>
           </div>
-          
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <MetricBar value={latest.gpa} color="var(--accent)" label="GPA Stability" tooltip="Consistency" />
             <MetricBar value={latest.assignments} color="var(--success)" label="Assignment Vigor" tooltip="Quality rate" />
@@ -186,26 +186,55 @@ export default function Analytics() {
         </div>
       </div>
 
+      {/* Mock Exam History Section */}
+      {data.mockExams?.length > 0 && (
+        <div className="glass-card" style={{ padding: 'clamp(1rem, 5vw, 2.5rem)', borderRadius: '24px' }}>
+          <h3 style={{ margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem' }}>
+            <Award size={20} color="var(--accent)" /> Recent Mock History
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+            {data.mockExams.map((exam: any) => (
+              <div key={exam.id} style={{ padding: '1.25rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: '800' }}>{exam.subject}</h4>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                    {new Date(exam.date).toLocaleDateString()}
+                  </p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: '950', color: exam.score >= 40 ? 'var(--success)' : 'var(--danger)' }}>
+                    {Math.round(exam.score)}%
+                  </div>
+                  <span style={{ fontSize: '0.65rem', fontWeight: '900', color: 'var(--text-muted)', letterSpacing: '1px' }}>
+                    {exam.score >= 40 ? 'PASSED' : 'FAILED'}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* AI Strategy Insights */}
       <div className="glass-card" style={{ border: '1px solid var(--accent)', background: 'var(--accent-glow)', borderRadius: '24px', padding: 'clamp(1rem, 5vw, 2.5rem)' }}>
         <h2 style={{ color: 'var(--accent)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.5rem' }}>
-          <Brain size={28} /> AI Strategy Insights
+          <Brain size={28} /> AI Tips for You
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-          <InsightCard 
-            title="PERFORMANCE" 
-            text={trend.improving 
-              ? `You've demonstrated a strong performance boost of ${trend.change}% compared to your previous assessment.` 
+          <InsightCard
+            title="PERFORMANCE"
+            text={trend.improving
+              ? `You've demonstrated a strong performance boost of ${trend.change}% compared to your previous assessment.`
               : `Your recent performance dip of ${Math.abs(Number(trend.change))}% suggests a focus shift. Revisit Month 2.`}
             color="var(--accent)"
           />
-          <InsightCard 
-            title="ADVISORY" 
+          <InsightCard
+            title="ADVISORY"
             text={`Your current academic bottleneck is ${weakness.name}. Use the Syllabus tool to break down complex topics.`}
             color="var(--warning)"
           />
-          <InsightCard 
-            title="CAREER PATH" 
+          <InsightCard
+            title="CAREER PATH"
             text={`At ${Math.round(careerReadiness)}% readiness, you are well-positioned for junior roles. Maintain high GPA targets.`}
             color="var(--success)"
           />

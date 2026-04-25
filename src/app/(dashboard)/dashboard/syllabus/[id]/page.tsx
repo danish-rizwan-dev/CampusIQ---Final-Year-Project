@@ -98,7 +98,7 @@ export default function TopicDetailsPage() {
             {activeTab === 'docs' && (
               <div>
                 <h2 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Sparkles size={20} color="var(--accent)" /> Technical Documentation
+                  <Sparkles size={20} color="var(--accent)" /> Topic Details
                 </h2>
                 <div 
                   className="docs-content"
@@ -136,7 +136,7 @@ export default function TopicDetailsPage() {
             {activeTab === 'practice' && (
               <div style={{ display: 'grid', gap: '1.5rem' }}>
                 <h2 style={{ fontSize: '1.2rem', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <GraduationCap size={20} color="var(--accent)" /> Practice Arena
+                  <GraduationCap size={20} color="var(--accent)" /> Practice Area
                 </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {topic.practiceQuestions?.length > 0 ? topic.practiceQuestions.map((pq: any, i: number) => (
@@ -159,7 +159,7 @@ export default function TopicDetailsPage() {
         {/* Sidebar Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '24px' }}>
-            <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '1px' }}>QUICK SPECS</h4>
+            <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '1px' }}>TOPIC INFO</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ background: 'var(--accent-glow)', padding: '8px', borderRadius: '10px' }}><Activity size={18} color="var(--accent)" /></div>
@@ -179,7 +179,7 @@ export default function TopicDetailsPage() {
           </div>
 
           <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '24px' }}>
-            <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '1px' }}>CORE CONCEPTS</h4>
+            <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', letterSpacing: '1px' }}>KEY TOPICS</h4>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               {topic.subtopics?.map((sub: string, i: number) => (
                 <span key={i} style={{ background: 'var(--bg-secondary)', padding: '6px 12px', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid var(--border)', fontWeight: 600 }}>

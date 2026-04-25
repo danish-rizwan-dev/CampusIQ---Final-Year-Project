@@ -200,7 +200,7 @@ export default function StudyAssistant() {
       {/* HEADER */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 className="gradient-text" style={{ margin: 0 }}>AI Study Assistant</h1>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: 0 }}>AI Assistant</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
             History saved automatically · Structured answers enabled
           </p>
@@ -266,10 +266,11 @@ export default function StudyAssistant() {
               maxWidth: '78%',
               padding: msg.role === 'user' ? '0.75rem 1.1rem' : '1rem 1.25rem',
               borderRadius: msg.role === 'user' ? '18px 6px 18px 18px' : '6px 18px 18px 18px',
-              background: msg.role === 'user' ? 'var(--accent)' : 'var(--bg-secondary)',
-              color: msg.role === 'user' ? '#fff' : 'var(--text-primary)',
+              background: msg.role === 'user' ? 'var(--accent-glow)' : 'var(--bg-secondary)',
+              color: 'var(--text-primary)',
               position: 'relative',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
+              border: msg.role === 'user' ? '1px solid var(--accent)' : '1px solid var(--border)',
+              boxShadow: 'var(--card-shadow)',
             }}>
 
               {msg.role === 'user' ? (

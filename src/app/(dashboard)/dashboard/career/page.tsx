@@ -348,7 +348,7 @@ export default function CareerAssessmentPage() {
           <div style={{ display: 'inline-flex', padding: '1.5rem', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
             <Brain size={48} color="var(--accent)" />
           </div>
-          <h1 className="gradient-text" style={{ fontSize: ' clamp(2rem, 5vw, 3rem)', margin: '0 0 1rem' }}>AI Career Assessment</h1>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: '0 0 1rem' }}>Career Path</h1>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>Navigate your future with precision. Our AI maps your skills and interests to high-growth career paths.</p>
           
           {/* Progress Indicator */}

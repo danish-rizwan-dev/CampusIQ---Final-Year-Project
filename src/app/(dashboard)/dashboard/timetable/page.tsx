@@ -143,18 +143,18 @@ export default function Timetable() {
     <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div className="page-header">
         <div>
-          <h1 className="gradient-text" style={{ margin: 0 }}>College Management</h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>Timetable &amp; assignments (Persisted to Database)</p>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: 0 }}>Class Schedule</h1>
+          <p style={{ color: 'var(--text-secondary)', margin: '0.5rem 0 0', fontSize: '0.9rem' }}>Manage your classes and upcoming tasks.</p>
         </div>
         <div className="stack-on-mobile">
           <button
             className={activeTab === 'schedule' ? 'btn-primary' : 'btn-secondary'}
             onClick={() => setActiveTab('schedule')}
-          >Schedule</button>
+          >Classes</button>
           <button
             className={activeTab === 'tasks' ? 'btn-primary' : 'btn-secondary'}
             onClick={() => setActiveTab('tasks')}
-          >Tasks &amp; Deadlines</button>
+          >Assignments</button>
         </div>
       </div>
 

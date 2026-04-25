@@ -83,7 +83,7 @@ export default function SyllabusAnalyzer() {
     })();
 
     toast.promise(promise, {
-      loading: `Extracting intelligence from ${file.name}...`,
+      loading: `Extracting Syllabus from ${file.name}...`,
       success: (data) => `Neural extraction complete.`,
       error: (err) => err.message || 'Extraction failed.'
     });
@@ -156,8 +156,8 @@ export default function SyllabusAnalyzer() {
     <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2.5rem', padding: '1rem' }}>
       <header className="page-header">
         <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', margin: 0 }}>Knowledge Graph</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem' }}>Your academic curriculum, decomposed into actionable intelligence.</p>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', margin: 0 }}>Syllabus Hub</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem' }}>Upload your syllabus to break it down into easy study topics.</p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           {persistentTopics.length > 0 && (
@@ -247,9 +247,14 @@ export default function SyllabusAnalyzer() {
           }, {})
         ).map(([subject, topics]: [string, any]) => (
           <div key={subject}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Book size={24} color="var(--accent)" /> {subject}
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 900, margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Book size={24} color="var(--accent)" /> {subject}
+              </h2>
+              <Link href={`/dashboard/mock-exam?subject=${encodeURIComponent(subject)}`} className="btn-primary" style={{ padding: '0.6rem 1.2rem', fontSize: '0.85rem' }}>
+                <Sparkles size={16} /> Practice Mock Test
+              </Link>
+            </div>
 
             <div className="syllabus-square-grid">
               {topics.map((topic: any) => (
@@ -333,14 +338,29 @@ export default function SyllabusAnalyzer() {
           aspect-ratio: 1 / 1;
           position: relative;
           cursor: pointer;
-          transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          padding: 1.5rem !important;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          padding: 1.75rem !important;
+          border: 1px solid var(--border);
+          overflow: hidden;
         }
 
         .square-card:hover {
-          transform: translateY(-8px) scale(1.02);
-          border-color: var(--accent) !important;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+          transform: translateY(-6px);
+          border-color: rgba(129, 140, 248, 0.3) !important;
+          box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .square-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+          transform: translateX(-100%);
+          transition: 0.6s;
+        }
+
+        .square-card:hover::before {
+          transform: translateX(100%);
         }
 
         .delete-btn {

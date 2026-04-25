@@ -18,6 +18,7 @@ export default function RoadmapPage() {
   const [evaluatingSemesterId, setEvaluatingSemesterId] = useState<string | null>(null);
   const [showRegenerateModal, setShowRegenerateModal] = useState(false);
   const [showManualForm, setShowManualForm] = useState(false);
+  const [selectedPath, setSelectedPath] = useState<string | null>(null);
   const isGeneratingRef = useRef(false);
 
   // Setup form for users with no roadmap yet
@@ -78,6 +79,7 @@ export default function RoadmapPage() {
   const handleGenerateRoadmap = async (e?: React.FormEvent, overwrite = false) => {
     if (e) e.preventDefault();
     setGenerating(true);
+    if (overwrite) setSelectedPath('Custom Path');
     try {
       const res = await fetch('/api/roadmap/generate', {
         method: 'POST',
@@ -93,9 +95,11 @@ export default function RoadmapPage() {
       console.error(err);
     }
     setGenerating(false);
+    setSelectedPath(null);
   };
 
   const handleQuickSelect = async (careerTitle: string) => {
+    setSelectedPath(careerTitle);
     setSetupData(prev => ({ ...prev, targetCareer: careerTitle }));
     const body = { 
         ...setupData, 
@@ -119,6 +123,7 @@ export default function RoadmapPage() {
       console.error(err);
     }
     setGenerating(false);
+    setSelectedPath(null);
   };
 
   if (loading && !userData) {
@@ -238,8 +243,8 @@ export default function RoadmapPage() {
     <div style={{ maxWidth: '900px', margin: '0 auto', padding: '1rem' }}>
       <header style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)', margin: '0 0 0.25rem' }}>
-            {user?.firstName}'s Roadmap
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: '0 0 0.25rem' }}>
+            {user?.firstName}'s Study Plan
           </h1>
           <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '1rem' }}>
              <strong style={{ color: 'var(--text-primary)' }}>{targetCourse}</strong>
@@ -279,10 +284,10 @@ export default function RoadmapPage() {
           <div style={{
             width: `${(completedSems / totalSems) * 100}%`,
             height: '100%',
-            background: 'linear-gradient(90deg, var(--accent) 0%, #8b5cf6 100%)',
+            background: 'var(--accent-gradient)',
             borderRadius: '10px',
             transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: '0 0 15px var(--accent-glow)'
+            boxShadow: 'var(--glow-shadow)'
           }} />
         </div>
       </div>
@@ -326,7 +331,7 @@ export default function RoadmapPage() {
                 position: 'absolute', left: '-3.1rem', top: '1.75rem', width: '20px', height: '20px',
                 borderRadius: '50%', background: 'var(--bg-secondary)', border: `4px solid var(--bg-primary)`,
               }} />
-              <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255,255,255,0.02)' }}>
+              <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <div style={{ padding: '0.75rem', borderRadius: '12px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
                   <Lock size={20} />
                 </div>
@@ -378,20 +383,21 @@ export default function RoadmapPage() {
                                     onClick={() => handleQuickSelect(rec.title)}
                                     disabled={generating}
                                     style={{ 
-                                        width: '100%', padding: '1rem', textAlign: 'left', background: 'var(--bg-secondary)', 
-                                        border: '1px solid var(--border)', borderRadius: '16px', cursor: 'pointer', transition: '0.3s',
-                                        display: 'flex', alignItems: 'center', gap: '1rem' 
+                                        width: '100%', padding: '1.25rem', textAlign: 'left', background: 'var(--bg-secondary)', 
+                                        border: `1px solid ${selectedPath === rec.title ? 'var(--accent)' : 'var(--border)'}`, 
+                                        borderRadius: '20px', cursor: 'pointer', transition: '0.3s',
+                                        display: 'flex', alignItems: 'center', gap: '1.25rem' 
                                     }}
                                     className="hover-card"
                                 >
-                                    <div style={{ width: '40px', height: '40px', background: 'var(--accent-glow)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Sparkles size={20} color="var(--accent)" />
+                                    <div style={{ width: '45px', height: '45px', background: 'var(--accent-glow)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {selectedPath === rec.title ? <Loader2 size={24} className="spin" color="var(--accent)" /> : <Sparkles size={24} color="var(--accent)" />}
                                     </div>
                                     <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: '700', fontSize: '1rem' }}>{rec.title}</div>
-                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{rec.confidence}% AI Match</div>
+                                        <div style={{ fontWeight: '800', fontSize: '1.1rem', color: selectedPath === rec.title ? 'var(--accent)' : 'var(--text-primary)' }}>{rec.title}</div>
+                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>{rec.confidence}% AI Compatibility Match</div>
                                     </div>
-                                    <ChevronRight size={18} color="var(--text-secondary)" />
+                                    <ChevronRight size={20} color="var(--text-secondary)" style={{ opacity: selectedPath === rec.title ? 0 : 1 }} />
                                 </button>
                             ))}
                         </div>
