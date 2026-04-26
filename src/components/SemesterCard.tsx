@@ -26,28 +26,31 @@ export default function SemesterCard({ id, semesterNumber, status, subjects, ski
     <div className={`glass-card ${isActive ? 'active-border' : ''}`} style={{ 
       display: 'flex', 
       flexDirection: 'column', 
-      gap: '1.25rem',
+      gap: 'clamp(1rem, 3vw, 1.25rem)',
       position: 'relative',
       opacity: status === 'PENDING' ? 0.7 : 1,
       transition: 'all 0.3s ease',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      padding: 'clamp(1.25rem, 4vw, 1.5rem)'
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.4rem' }}>Semester {semesterNumber}</h3>
+          <h3 style={{ margin: 0, fontSize: 'clamp(1.1rem, 3vw, 1.4rem)', fontWeight: '800' }}>Semester {semesterNumber}</h3>
           {isActive && (
-            <span style={{ fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              Current Focus <Target size={14} />
+            <span style={{ fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              Current Focus <Target size={12} />
             </span>
           )}
         </div>
         <div style={{ 
-          padding: '0.25rem 0.75rem', 
-          borderRadius: '20px', 
-          fontSize: '0.7rem', 
-          fontWeight: 'bold',
-          background: isActive ? 'var(--accent)' : isCompleted ? 'var(--success)' : 'var(--border)',
-          color: isActive || isCompleted ? 'white' : 'var(--text-secondary)'
+          padding: '0.3rem 0.75rem', 
+          borderRadius: '12px', 
+          fontSize: '0.65rem', 
+          fontWeight: '900',
+          background: isActive ? 'var(--accent)' : isCompleted ? 'var(--success)' : 'var(--bg-secondary)',
+          color: isActive || isCompleted ? 'white' : 'var(--text-muted)',
+          letterSpacing: '1px',
+          flexShrink: 0
         }}>
           {status}
         </div>
@@ -55,59 +58,60 @@ export default function SemesterCard({ id, semesterNumber, status, subjects, ski
 
       <div className="responsive-grid-2" style={{ gap: '1rem' }}>
         <div>
-          <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-            <BookOpen size={14} /> Subjects
+          <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: '800', letterSpacing: '0.5px' }}>
+            <BookOpen size={14} /> SUBJECTS
           </h4>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
             {subjects.slice(0, 3).map((sub, i) => (
-              <li key={i} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>• {sub}</li>
+              <li key={i} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-primary)' }}>• {sub}</li>
             ))}
           </ul>
         </div>
         <div>
-          <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-            <CheckCircle2 size={14} /> Core Skills
+          <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: '800', letterSpacing: '0.5px' }}>
+            <CheckCircle2 size={14} /> CORE SKILLS
           </h4>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
             {skills.slice(0, 3).map((skill, i) => (
-              <li key={i}>• {skill}</li>
+              <li key={i} style={{ color: 'var(--text-primary)' }}>• {skill}</li>
             ))}
           </ul>
         </div>
       </div>
 
       {environmentSetup && (
-        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '0.5rem' }}>
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '0.25rem' }}>
           <button 
             onClick={() => setShowSetup(!showSetup)}
             style={{ 
               background: 'var(--accent-glow)', 
-              border: 'none', 
+              border: '1px solid var(--accent-glow)', 
               color: 'var(--accent)', 
               width: '100%', 
-              padding: '0.6rem', 
-              borderRadius: '10px', 
+              padding: '0.7rem', 
+              borderRadius: '12px', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               gap: '0.5rem',
-              fontSize: '0.85rem',
-              fontWeight: '600',
-              cursor: 'pointer'
+              fontSize: '0.75rem',
+              fontWeight: '800',
+              cursor: 'pointer',
+              transition: '0.3s'
             }}
           >
-            <Wrench size={16} /> {showSetup ? 'Hide Setup Guide' : 'View Environment Setup'}
+            <Wrench size={16} /> {showSetup ? 'HIDE SETUP GUIDE' : 'VIEW SETUP GUIDE'}
           </button>
 
           {showSetup && (
-            <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ marginTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div>
-                <h5 style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Info size={14} /> Tools & Software
+                <h5 style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '900', letterSpacing: '1px' }}>
+                  <Info size={14} /> TOOLS & SOFTWARE
                 </h5>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                   {environmentSetup.tools.map((tool, i) => (
-                    <span key={i} title={environmentSetup.reasons[i]} style={{ background: 'var(--bg-secondary)', padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', border: '1px solid var(--border)', cursor: 'help' }}>
+                    <span key={i} title={environmentSetup.reasons[i]} style={{ background: 'var(--bg-secondary)', padding: '0.4rem 0.75rem', borderRadius: '8px', fontSize: '0.7rem', border: '1px solid var(--border)', cursor: 'help', fontWeight: '600' }}>
                       {tool}
                     </span>
                   ))}
@@ -115,27 +119,27 @@ export default function SemesterCard({ id, semesterNumber, status, subjects, ski
               </div>
 
               <div>
-                <h5 style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <ExternalLink size={14} /> Setup Resources
+                <h5 style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '900', letterSpacing: '1px' }}>
+                  <ExternalLink size={14} /> RESOURCES
                 </h5>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {environmentSetup.resources.map((res, i) => (
-                    <a key={i} href={res.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      • {res.name} <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>({res.type})</span>
+                    <a key={i} href={res.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '600' }}>
+                      • {res.name} <span style={{ fontSize: '0.65rem', opacity: 0.6 }}>({res.type})</span>
                     </a>
                   ))}
                 </div>
               </div>
 
               <div>
-                <h5 style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <BookIcon size={14} /> Recommended Books
+                <h5 style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '900', letterSpacing: '1px' }}>
+                  <BookIcon size={14} /> BOOKS
                 </h5>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                   {environmentSetup.books.map((book, i) => (
                     <div key={i} style={{ fontSize: '0.8rem' }}>
-                      <strong style={{ display: 'block' }}>{book.title}</strong>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>by {book.author}</span>
+                      <strong style={{ display: 'block', color: 'var(--text-primary)' }}>{book.title}</strong>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>by {book.author}</span>
                     </div>
                   ))}
                 </div>
@@ -145,22 +149,22 @@ export default function SemesterCard({ id, semesterNumber, status, subjects, ski
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+      <div className="stack-on-mobile" style={{ gap: '0.75rem', marginTop: '0.5rem' }}>
         <Link 
           href={`/dashboard/roadmap/${id}`}
           className="btn-secondary" 
-          style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', padding: '0.75rem 0.5rem' }}
+          style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', padding: '0.8rem 0.5rem', borderRadius: '12px' }}
         >
-          View Full Plan <ChevronRight size={16} />
+          VIEW FULL PLAN <ChevronRight size={16} />
         </Link>
         
         {isActive && onEvaluate && (
           <button 
             onClick={onEvaluate}
             className="btn-primary" 
-            style={{ flex: 1, fontSize: '0.85rem', padding: '0.75rem 0.5rem' }}
+            style={{ flex: 1, fontSize: '0.8rem', padding: '0.8rem 0.5rem', borderRadius: '12px' }}
           >
-            Complete Semester
+            COMPLETE SEMESTER
           </button>
         )}
       </div>
@@ -168,7 +172,7 @@ export default function SemesterCard({ id, semesterNumber, status, subjects, ski
       <style jsx>{`
         .active-border {
           border-color: var(--accent);
-          box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+          box-shadow: 0 0 25px var(--accent-glow);
         }
       `}</style>
     </div>

@@ -342,14 +342,14 @@ export default function CareerAssessmentPage() {
   };
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', paddingBottom: '5rem' }}>
+    <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(0.5rem, 3vw, 1rem) clamp(2rem, 10vh, 5rem)' }}>
       {step < 5 && (
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div style={{ display: 'inline-flex', padding: '1.5rem', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
-            <Brain size={48} color="var(--accent)" />
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 8vh, 4rem)' }}>
+          <div style={{ display: 'inline-flex', padding: 'clamp(1rem, 3vw, 1.5rem)', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
+            <Brain size={40} color="var(--accent)" />
           </div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: '0 0 1rem' }}>Career Path</h1>
-          <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>Navigate your future with precision. Our AI maps your skills and interests to high-growth career paths.</p>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: '0 0 0.5rem', lineHeight: 1.1 }}>Career Architect</h1>
+          <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: 'clamp(0.85rem, 1.2vw, 1rem)' }}>Navigate your future with precision. Our AI maps your trajectory.</p>
           
           {/* Progress Indicator */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>
@@ -357,8 +357,9 @@ export default function CareerAssessmentPage() {
               <div 
                 key={s} 
                 style={{ 
-                  width: '60px', height: '6px', borderRadius: '3px', 
-                  background: s <= step ? 'var(--accent)' : 'var(--border)',
+                  flex: '0 1 60px', height: '6px', borderRadius: '3px', 
+                  background: s <= step ? 'var(--accent)' : 'var(--bg-secondary)',
+                  border: '1px solid var(--border)',
                   transition: '0.5s cubic-bezier(0.4, 0, 0.2, 1)'
                 }} 
               />
@@ -368,19 +369,65 @@ export default function CareerAssessmentPage() {
       )}
 
       {step < 5 && (
-        <div className="glass-card" style={{ maxWidth: '600px', margin: '0 auto', padding: '2.5rem', borderRadius: '32px' }}>
+        <div className="glass-card" style={{ maxWidth: '600px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 2.5rem)', borderRadius: '24px' }}>
           {renderStep()}
         </div>
       )}
 
-      {step === 5 && renderStep()}
+      {step === 5 && (
+        <div className="fade-in">
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 5vh, 3.5rem)' }}>
+            <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.75rem)', marginBottom: '0.75rem', lineHeight: 1.1 }}>Your Predicted Paths</h1>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '700px', margin: '0 auto', fontSize: 'clamp(0.85rem, 1.2vw, 1rem)' }}>
+              Analyzed for your <strong>{formData.targetCourse}</strong> background.
+            </p>
+          </div>
+
+          <div className="responsive-grid" style={{ gap: '1rem' }}>
+            {results?.map((career, idx) => (
+              <div key={idx} className="glass-card fade-in" style={{ padding: 'clamp(1.25rem, 4vw, 2rem)', cursor: 'pointer', animationDelay: `${idx * 0.1}s`, borderRadius: '24px', border: '1px solid var(--border)', transition: '0.3s ease' }} onClick={() => setSelectedCareer(career)}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', gap: '1rem' }}>
+                  <div style={{ width: '48px', height: '48px', background: 'var(--accent-glow)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Briefcase size={24} color="var(--accent)" />
+                  </div>
+                  <div style={{ background: 'var(--success)', color: 'white', padding: '0.3rem 0.75rem', borderRadius: '10px', fontSize: '0.7rem', fontWeight: '900', letterSpacing: '0.5px' }}>
+                    {career.confidence}% MATCH
+                  </div>
+                </div>
+                <h3 style={{ margin: '0 0 0.75rem 0', fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: '900' }}>{career.title}</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.6', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {career.reasoning}
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--accent)', fontSize: '0.75rem', fontWeight: '900', borderTop: '1px solid var(--border)', paddingTop: '1.25rem', letterSpacing: '1px' }}>
+                  <span>DEEP DIVE ANALYSIS</span>
+                  <ChevronRight size={18} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 'clamp(3rem, 10vh, 5rem)', textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: '3rem' }}>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.85rem', fontWeight: '600' }}>Want to try a different academic background?</p>
+            <button 
+              onClick={() => {
+                setStep(1);
+                setResults(null);
+              }} 
+              className="btn-secondary" 
+              style={{ padding: '0.8rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.75rem', borderRadius: '12px', fontSize: '0.85rem', fontWeight: '800' }}
+            >
+              <RefreshCw size={18} /> RE-START ASSESSMENT
+            </button>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
-        .input-label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 600; }
+        .input-label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem; font-weight: 800; letter-spacing: 0.5px; }
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
     </div>
   );

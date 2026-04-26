@@ -159,54 +159,54 @@ function MockExamsContent() {
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(0.5rem, 3vw, 1rem)', display: 'flex', flexDirection: 'column', gap: 'clamp(1.5rem, 5vh, 2.5rem)' }}>
       
-      <header className="page-header" style={{ alignItems: 'center' }}>
-        <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: 0 }}>Mock Exams</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem' }}>
-            Generate and take detailed exams to test your knowledge.
+      <header className="page-header" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ flex: '1 1 300px' }}>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 6vw, 2.8rem)', margin: 0, fontWeight: 950, lineHeight: 1 }}>Mock Exams</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem', fontWeight: 600 }}>
+            Test your knowledge with AI-driven simulations.
           </p>
         </div>
         {!showCreator && exams.length > 0 && (
-          <button className="btn-primary" onClick={() => setShowCreator(true)}>
-            <Plus size={18} /> Generate New Exam
+          <button className="btn-primary" onClick={() => setShowCreator(true)} style={{ borderRadius: '12px', padding: '12px 20px', fontSize: '0.8rem', fontWeight: 900 }}>
+            <Plus size={18} /> GENERATE NEW
           </button>
         )}
       </header>
 
       {showCreator && (
-        <div className="glass-card" style={{ padding: '2.5rem', borderRadius: '32px', position: 'relative' }}>
+        <div className="glass-card" style={{ padding: 'clamp(1.25rem, 5vw, 2.5rem)', borderRadius: '28px', position: 'relative', border: '1px solid var(--border)' }}>
           {exams.length > 0 && (
-            <button onClick={() => setShowCreator(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-              <X size={24} />
+            <button onClick={() => setShowCreator(false)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: '10px', padding: '8px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+              <X size={20} />
             </button>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2.5rem' }}>
-            <div style={{ background: 'var(--accent-glow)', padding: '1rem', borderRadius: '16px', color: 'var(--accent)' }}>
-              <FileText size={32} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ background: 'var(--accent-glow)', padding: '0.75rem', borderRadius: '12px', color: 'var(--accent)' }}>
+              <FileText size={24} />
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>Create Mock Exam</h2>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>AI will generate MCQs and Detailed questions based on your syllabus.</p>
+              <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900 }}>Create Exam</h2>
+              <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 600 }}>NEURAL GENERATION ACTIVE</p>
             </div>
           </div>
 
           {filteredSubjects.length > 0 && (
-            <div style={{ marginBottom: '2.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <p style={{ fontSize: '0.7rem', fontWeight: 900, color: 'var(--accent)', letterSpacing: '2px', margin: 0 }}>QUICK GENERATE BY SUBJECT</p>
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                <p style={{ fontSize: '0.6rem', fontWeight: 900, color: 'var(--accent)', letterSpacing: '2px', margin: 0 }}>QUICK SUBJECTS</p>
                 {filteredSubjects.length > 4 && (
                   <button 
                     onClick={() => setShowAllSubjects(!showAllSubjects)}
-                    style={{ background: 'none', border: 'none', color: 'var(--accent)', fontSize: '0.8rem', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                    style={{ background: 'none', border: 'none', color: 'var(--accent)', fontSize: '0.7rem', fontWeight: '800', cursor: 'pointer' }}
                   >
                     {showAllSubjects ? 'SHOW LESS' : `VIEW ALL (${filteredSubjects.length})`}
                   </button>
                 )}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.6rem' }}>
                 {(showAllSubjects ? filteredSubjects : filteredSubjects.slice(0, 4)).map(sub => (
                   <button 
                     key={sub}
@@ -219,24 +219,17 @@ function MockExamsContent() {
                       generateExam({ subject: sub, syllabus: relevantTopics });
                     }}
                     style={{
-                      padding: '1.25rem',
-                      borderRadius: '20px',
+                      padding: '0.75rem',
+                      borderRadius: '12px',
                       background: 'var(--bg-secondary)',
                       color: 'var(--text-primary)',
                       border: '1px solid var(--border)',
-                      fontSize: '0.9rem',
-                      fontWeight: '800',
+                      fontSize: '0.8rem',
+                      fontWeight: '700',
                       cursor: 'pointer',
-                      transition: '0.3s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '10px'
+                      textAlign: 'center'
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-glow)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--bg-secondary)'; }}
                   >
-                    <Sparkles size={16} color="var(--accent)" />
                     {sub}
                   </button>
                 ))}
@@ -244,16 +237,16 @@ function MockExamsContent() {
             </div>
           )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div>
-              <label className="input-label">SELECT SUBJECT</label>
+              <label className="input-label">TARGET SUBJECT</label>
               <select 
                 className="input-field"
                 value={form.subject}
                 onChange={e => handleSubjectSelect(e.target.value)}
-                style={{ appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.2rem' }}
+                style={{ appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1rem', borderRadius: '12px' }}
               >
-                <option value="">-- Choose a subject --</option>
+                <option value="">-- Select Subject --</option>
                 {filteredSubjects.map(sub => (
                   <option key={sub} value={sub}>{sub}</option>
                 ))}
@@ -263,93 +256,92 @@ function MockExamsContent() {
 
             {form.subject === 'custom' && (
               <div>
-                <label className="input-label">CUSTOM SUBJECT NAME</label>
+                <label className="input-label">SUBJECT NAME</label>
                 <input 
                   type="text" 
                   className="input-field" 
                   placeholder="e.g. Operating Systems" 
                   value={form.subject === 'custom' ? '' : form.subject}
                   onChange={e => setForm({...form, subject: e.target.value})}
+                  style={{ borderRadius: '12px' }}
                 />
               </div>
             )}
 
             <div>
-              <label className="input-label">SYLLABUS / TOPICS</label>
+              <label className="input-label">SYLLABUS CONTEXT</label>
               <textarea 
                 className="input-field" 
-                style={{ minHeight: '150px' }}
-                placeholder="The syllabus will be auto-filled if you select a subject above, or you can paste it here..."
+                style={{ minHeight: '120px', borderRadius: '12px' }}
+                placeholder="Details help AI generate better questions..."
                 value={form.syllabus}
                 onChange={e => setForm({...form, syllabus: e.target.value})}
               />
             </div>
             <button 
               className="btn-primary" 
-              style={{ padding: '1.25rem', width: '100%', fontSize: '1.1rem' }}
+              style={{ padding: '1rem', width: '100%', fontSize: '1rem', borderRadius: '14px', fontWeight: 900 }}
               disabled={loading || !form.subject}
               onClick={() => generateExam()}
             >
-              {loading ? <Loader2 size={20} className="spin" /> : <Sparkles size={20} />}
-              {loading ? 'ANALYZING SYLLABUS...' : 'GENERATE MOCK EXAM'}
+              {loading ? <Loader2 size={18} className="spin" /> : <Sparkles size={18} />}
+              <span style={{ marginLeft: '8px' }}>{loading ? 'ANALYZING...' : 'INITIALIZE SIMULATION'}</span>
             </button>
           </div>
         </div>
       )}
 
       {exams.length === 0 && !showCreator && !fetching && (
-        <div style={{ textAlign: 'center', padding: '4rem 0' }}>
-          <History size={48} color="var(--text-secondary)" style={{ opacity: 0.3, marginBottom: '1rem' }} />
-          <p style={{ color: 'var(--text-secondary)' }}>No exams found. Click "Generate New Exam" to get started.</p>
-          <button className="btn-primary" style={{ marginTop: '1.5rem' }} onClick={() => setShowCreator(true)}>
-            <Plus size={18} /> Generate Your First Exam
+        <div style={{ textAlign: 'center', padding: '4rem 1rem', background: 'var(--bg-secondary)', borderRadius: '32px', border: '1px dashed var(--border)' }}>
+          <History size={40} color="var(--text-secondary)" style={{ opacity: 0.2, marginBottom: '1rem' }} />
+          <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>NO ACTIVE EXAMS FOUND</p>
+          <button className="btn-primary" style={{ marginTop: '1.5rem', borderRadius: '12px' }} onClick={() => setShowCreator(true)}>
+            <Plus size={18} /> GENERATE FIRST EXAM
           </button>
         </div>
       )}
 
       {exams.length > 0 && (
-        <div className="responsive-grid">
+        <div className="responsive-grid" style={{ gap: '1rem' }}>
           {exams.map((exam) => (
-            <div key={exam.id} className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div key={exam.id} className="glass-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', borderRadius: '24px', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ padding: '0.5rem', background: 'var(--accent-glow)', borderRadius: '12px', color: 'var(--accent)' }}>
-                  <Target size={24} />
+                <div style={{ padding: '0.5rem', background: 'var(--accent-glow)', borderRadius: '10px', color: 'var(--accent)' }}>
+                  <Target size={20} />
                 </div>
                 <div style={{ 
                   padding: '4px 10px', 
                   background: exam.status === 'COMPLETED' ? 'var(--success-glow)' : 'var(--warning-glow)', 
                   color: exam.status === 'COMPLETED' ? 'var(--success)' : 'var(--warning)',
                   borderRadius: '8px',
-                  fontSize: '0.7rem',
+                  fontSize: '0.65rem',
                   fontWeight: '900'
                 }}>
                   {exam.status}
                 </div>
                 <button 
                   onClick={(e) => { e.preventDefault(); deleteExam(exam.id); }}
-                  style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', opacity: 0.6, transition: '0.3s' }}
-                  onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
+                  style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', opacity: 0.4 }}
                 >
-                  <Trash2 size={18} />
+                  <Trash2 size={16} />
                 </button>
               </div>
               
               <div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, margin: '0 0 0.5rem 0' }}>{exam.subject}</h3>
-                <div style={{ display: 'flex', gap: '1rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 900, margin: '0 0 0.5rem 0', lineHeight: 1.2 }}>{exam.subject}</h3>
+                <div style={{ display: 'flex', gap: '0.75rem', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Clock size={14} /> {exam.durationMinutes}m
+                    <Clock size={12} /> {exam.durationMinutes}M
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <FileText size={14} /> {exam.totalMarks} Marks
+                    <FileText size={12} /> {exam.totalMarks} MARKS
                   </div>
                 </div>
               </div>
 
               <div style={{ marginTop: 'auto' }}>
-                <Link href={`/dashboard/mock-exam/${exam.id}`} className="btn-primary" style={{ width: '100%' }}>
-                  {exam.status === 'COMPLETED' ? 'REVIEW RESULTS' : 'START EXAM'}
+                <Link href={`/dashboard/mock-exam/${exam.id}`} className="btn-primary" style={{ width: '100%', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 900, padding: '12px' }}>
+                  {exam.status === 'COMPLETED' ? 'REVIEW RESULTS' : 'START SIMULATION'}
                 </Link>
               </div>
             </div>
@@ -359,12 +351,12 @@ function MockExamsContent() {
 
       <style jsx>{`
         .input-label {
-          font-size: 0.8rem;
-          font-weight: 800;
-          color: var(--text-secondary);
-          margin-bottom: 8px;
+          font-size: 0.65rem;
+          font-weight: 900;
+          color: var(--text-muted);
+          margin-bottom: 6px;
           display: block;
-          letter-spacing: 1px;
+          letter-spacing: 1.5px;
         }
       `}</style>
     </div>

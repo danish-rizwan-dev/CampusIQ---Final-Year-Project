@@ -92,65 +92,72 @@ export default function SemesterDetail() {
         </div>
       </div>
 
-      <div className="responsive-grid-wide">
+      <div className="stack-on-mobile" style={{ gap: '2rem', width: '100%' }}>
         {/* Main Timeline */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.5rem' }}>
-            <Calendar size={24} color="var(--accent)" /> Detailed Timeline
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1.8 }}>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', margin: '0 0 0.5rem' }}>
+            <Calendar size={20} color="var(--accent)" /> Detailed Timeline
           </h2>
           
           {months.map(({ month, weeks }) => (
-            <div key={month} className="glass-card" style={{ padding: 0, overflow: 'hidden', borderRadius: '20px' }}>
+            <div key={month} className="glass-card" style={{ padding: 0, overflow: 'hidden', borderRadius: '24px', border: '1px solid var(--border)' }}>
               <button 
                 onClick={() => setExpandedMonth(expandedMonth === month ? 0 : month)}
                 className="month-header"
                 style={{ 
-                  width: '100%', padding: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
-                  background: expandedMonth === month ? 'var(--bg-secondary)' : 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' 
+                  width: '100%', padding: 'clamp(1rem, 3vw, 1.25rem)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
+                  background: expandedMonth === month ? 'var(--accent-glow)' : 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' 
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <div style={{ width: '40px', height: '40px', minWidth: '40px', borderRadius: '12px', background: 'var(--accent)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(0.75rem, 2vw, 1.25rem)' }}>
+                  <div style={{ 
+                    width: 'clamp(36px, 10vw, 44px)', height: 'clamp(36px, 10vw, 44px)', 
+                    borderRadius: '12px', background: 'var(--accent)', color: 'white', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '1rem' 
+                  }}>
                     {month}
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Month {month}</h3>
-                    <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                      Focus: {weeks[0]?.focus?.split(':')[0] || 'Curriculum Focus'}
+                    <h3 style={{ margin: 0, fontSize: 'clamp(1rem, 2vw, 1.1rem)', fontWeight: '800' }}>MONTH {month}</h3>
+                    <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: '600' }}>
+                      {weeks[0]?.focus?.split(':')[0] || 'PHASE INITIALIZATION'}
                     </p>
                   </div>
                 </div>
-                {expandedMonth === month ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+                {expandedMonth === month ? <ChevronDown size={18} /> : <ChevronRight size={18} opacity={0.5} />}
               </button>
 
               {expandedMonth === month && (
-                <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '2rem', borderTop: '1px solid var(--border)', background: 'var(--bg-primary)' }}>
+                <div style={{ padding: 'clamp(1.25rem, 4vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: '2rem', borderTop: '1px solid var(--border)', background: 'var(--bg-primary)' }}>
                   {weeks.map((week: any) => (
                     <div key={week.week} className="week-item">
-                      <div style={{ position: 'absolute', left: '-10px', top: '0', background: 'var(--bg-primary)', padding: '2px' }}>
-                        <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'var(--accent)', border: '4px solid var(--bg-primary)' }} />
+                      <div style={{ position: 'absolute', left: '-1px', top: '0', background: 'var(--bg-primary)', padding: '2px', transform: 'translateX(-50%)' }}>
+                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent)', border: '2px solid var(--bg-primary)', boxShadow: '0 0 10px var(--accent)' }} />
                       </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                         <div className="week-header">
-                          <h4 className="week-title">Week {week.week}: {week.focus}</h4>
+                          <h4 className="week-title" style={{ fontSize: '1rem', fontWeight: '800', lineHeight: 1.3 }}>
+                            WEEK {week.week}: <span style={{ color: 'var(--text-secondary)' }}>{week.focus}</span>
+                          </h4>
                           {week.youtubeSearchUrl && (
                             <a 
                               href={week.youtubeSearchUrl} 
                               target="_blank" 
                               rel="noopener noreferrer" 
                               className="btn-secondary watch-btn"
+                              style={{ padding: '6px 12px', fontSize: '0.7rem', fontWeight: '800', borderRadius: '8px' }}
                             >
-                              <Video size={16} /> Watch
+                              <Video size={14} /> WATCH
                             </a>
                           )}
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-primary)', lineHeight: '1.6', opacity: 0.8 }}>
                           {week.details}
                         </p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.5rem' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
                           {week.tasks.map((task: string, idx: number) => (
-                            <span key={idx} style={{ background: 'var(--bg-secondary)', padding: '0.35rem 0.75rem', borderRadius: '8px', fontSize: '0.8rem', border: '1px solid var(--border)', fontWeight: '500' }}>
-                              • {task}
+                            <span key={idx} style={{ background: 'var(--bg-secondary)', padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.7rem', border: '1px solid var(--border)', fontWeight: '700', color: 'var(--accent)' }}>
+                              {task.toUpperCase()}
                             </span>
                           ))}
                         </div>
@@ -159,10 +166,7 @@ export default function SemesterDetail() {
                   ))}
                   {weeks.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '2rem' }}>
-                      <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Detailed timeline for this semester was generated in the old format.</p>
-                      <button className="btn-primary" onClick={() => toast.info("Regeneration logic coming in next update!")}>
-                        Regenerate for 24-Week View
-                      </button>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Data structure mismatch. Please update roadmap.</p>
                     </div>
                   )}
                 </div>
@@ -172,100 +176,39 @@ export default function SemesterDetail() {
         </div>
 
         {/* Sidebar Info */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          {/* Subjects */}
-          <div className="glass-card" style={{ borderRadius: '24px' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
-              <BookOpen size={22} color="var(--accent)" /> Core Subjects
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1 }}>
+          <div className="glass-card" style={{ borderRadius: '24px', padding: '1.5rem' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem', fontSize: '0.9rem', fontWeight: '900', letterSpacing: '1px' }}>
+              <BookOpen size={18} color="var(--accent)" /> CORE CURRICULUM
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               {roadmap.subjects?.map((sub: string, idx: number) => (
                 <div key={idx} style={{ 
-                  display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', 
-                  background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)'
+                  display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', 
+                  background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid var(--border)'
                 }}>
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent)' }} />
-                  <span style={{ fontSize: '0.95rem', fontWeight: '600' }}>{sub}</span>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: '700' }}>{sub}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Key Skill Targets */}
-          <div className="glass-card" style={{ borderRadius: '24px' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
-              <Target size={22} color="var(--accent)" /> Skill Checklist
+          <div className="glass-card" style={{ borderRadius: '24px', padding: '1.5rem' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem', fontSize: '0.9rem', fontWeight: '900', letterSpacing: '1px' }}>
+              <Award size={18} color="var(--warning)" /> MILESTONE PROJECTS
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {roadmap.skills?.map((skill: string, idx: number) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-                  <CheckCircle2 size={18} color="var(--success)" /> {skill}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Setup Guide & Books */}
-          {roadmap.environmentSetup && (
-             <div className="glass-card" style={{ borderRadius: '24px', border: '1px solid var(--accent)' }}>
-                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
-                    <Loader2 size={22} color="var(--accent)" /> Setup & Resources
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div>
-                        <h4 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Required Tools</h4>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                            {roadmap.environmentSetup.tools.map((tool: string, i: number) => (
-                                <span key={i} title={roadmap.environmentSetup.reasons[i]} style={{ background: 'var(--bg-secondary)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', border: '1px solid var(--border)', cursor: 'help' }}>
-                                    {tool}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Recommended Books</h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            {roadmap.environmentSetup.books.map((book: any, i: number) => (
-                                <div key={i} style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                                    <strong style={{ display: 'block', fontSize: '0.95rem' }}>{book.title}</strong>
-                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>by {book.author}</span>
-                                    <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{book.description}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>Setup Resources</h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {roadmap.environmentSetup.resources.map((res: any, i: number) => (
-                                <a key={i} href={res.url} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: '0.6rem 1rem', borderRadius: '10px', fontSize: '0.85rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                     {res.name} <span style={{ opacity: 0.5 }}>• {res.type}</span>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-             </div>
-          )}
-
-          {/* Projects */}
-          <div className="glass-card" style={{ borderRadius: '24px' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
-              <Award size={22} color="var(--accent)" /> Projects
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {roadmap.projects?.map((proj: any, idx: number) => (
-                <div key={idx} style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                    <strong style={{ fontSize: '1rem' }}>{proj.name}</strong>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent)' }}>Month {proj.month}</span>
+                <div key={idx} style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '16px', border: '1px solid var(--border)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
+                    <strong style={{ fontSize: '0.85rem', fontWeight: '800' }}>{proj.name}</strong>
+                    <span style={{ fontSize: '0.6rem', fontWeight: '900', color: 'var(--accent)', background: 'var(--accent-glow)', padding: '2px 6px', borderRadius: '4px' }}>M{proj.month}</span>
                   </div>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 0.75rem' }}>{proj.description}</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '0 0 0.75rem', lineHeight: 1.4 }}>{proj.description}</p>
                   {proj.youtubeSearchUrl && (
-                    <a href={proj.youtubeSearchUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.75rem', color: 'var(--danger)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Video size={14} /> View Reference
+                    <a href={proj.youtubeSearchUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--danger)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <Video size={12} /> REFERENCE PROTOCOL
                     </a>
                   )}
                 </div>
@@ -276,29 +219,27 @@ export default function SemesterDetail() {
       </div>
       <style jsx>{`
         .detail-page-container {
-          maxWidth: 1000px;
+          maxWidth: 1200px;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
           gap: 2rem;
-          padding: 1rem;
+          padding: 0 clamp(0.5rem, 3vw, 1rem);
           width: 100%;
-          box-sizing: border-box;
-          overflow-x: hidden;
-          text-align: left;
         }
 
-        .header-title-group {
-          flex: 1;
+        .page-header {
+          display: flex;
+          align-items: center;
+          gap: 1.25rem;
+          width: 100%;
         }
 
         .week-item {
           position: relative;
-          padding-left: 2.5rem;
-          border-left: 2px solid var(--border);
+          padding-left: 1.75rem;
+          border-left: 1px solid var(--border);
           transition: 0.3s;
-          margin-bottom: 0.5rem;
         }
 
         .week-header {
@@ -306,50 +247,21 @@ export default function SemesterDetail() {
           justify-content: space-between;
           align-items: flex-start;
           gap: 1rem;
-          margin-bottom: 0.5rem;
-        }
-
-        .week-title {
-          margin: 0;
-          font-size: 1.1rem;
-          line-height: 1.4;
-          word-break: break-word;
-          overflow-wrap: break-word;
         }
 
         .watch-btn {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.4rem 0.8rem;
-          font-size: 0.75rem;
-          border-radius: 10px;
+          gap: 0.4rem;
           color: var(--danger) !important;
           border: 1px solid var(--border);
           flex-shrink: 0;
         }
-
-        .month-header {
-          transition: background 0.2s ease;
-        }
         
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
           .page-header {
-            flex-direction: column;
-            align-items: flex-start !important;
-            justify-content: flex-start !important;
-            gap: 1rem !important;
-          }
-          .header-title-group {
-            flex: initial !important;
-            min-width: 0;
-            text-align: left;
-          }
-          .week-item {
-            padding-left: 1.5rem;
-          }
-          .month-header {
-            padding: 1rem !important;
+            flex-direction: row;
+            align-items: center;
           }
           .week-header {
             flex-direction: column;

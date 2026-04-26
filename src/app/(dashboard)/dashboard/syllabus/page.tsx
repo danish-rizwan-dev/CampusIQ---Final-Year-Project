@@ -153,39 +153,39 @@ export default function SyllabusAnalyzer() {
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2.5rem', padding: '1rem' }}>
-      <header className="page-header">
-        <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', margin: 0 }}>Syllabus Hub</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem' }}>Upload your syllabus to break it down into easy study topics.</p>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'clamp(1.5rem, 5vh, 2.5rem)', padding: '0 clamp(0.5rem, 3vw, 1rem) 2rem' }}>
+      <header className="page-header" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ flex: '1 1 300px' }}>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', margin: 0, lineHeight: 1.1 }}>Syllabus Hub</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.85rem, 1.2vw, 1rem)', marginTop: '0.5rem' }}>Neural decomposition of your academic workload.</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
           {persistentTopics.length > 0 && (
-            <button className="btn-secondary" onClick={() => setClearingAll(true)} style={{ color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
-              <Trash2 size={18} /> Clear Data
+            <button className="btn-secondary" onClick={() => setClearingAll(true)} style={{ color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.2)', fontSize: '0.8rem', padding: '0.6rem 1rem' }}>
+              <Trash2 size={16} /> CLEAR
             </button>
           )}
           {!showInput && (
-            <button className="btn-primary" onClick={() => setShowInput(true)}>
-              <Plus size={18} /> New Syllabus
+            <button className="btn-primary" onClick={() => setShowInput(true)} style={{ fontSize: '0.8rem', padding: '0.6rem 1rem' }}>
+              <Plus size={16} /> ADD NEW
             </button>
           )}
         </div>
       </header>
 
       {showInput && (
-        <div className="glass-card fade-in" style={{ padding: '2rem', borderRadius: '32px' }}>
-          <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-secondary)', padding: '4px', borderRadius: '12px', width: 'fit-content', marginBottom: '2rem' }}>
-            {([{ id: 'text', label: 'Paste Text' }, { id: 'pdf', label: 'Upload File' }] as const).map(tab => (
+        <div className="glass-card fade-in" style={{ padding: 'clamp(1rem, 4vw, 2rem)', borderRadius: '24px' }}>
+          <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-secondary)', padding: '4px', borderRadius: '12px', width: 'fit-content', marginBottom: '1.5rem' }}>
+            {([{ id: 'text', label: 'PASTE TEXT' }, { id: 'pdf', label: 'UPLOAD FILE' }] as const).map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setInputTab(tab.id)}
                 style={{
-                  padding: '0.5rem 1.25rem', borderRadius: '10px', border: 'none',
-                  fontSize: '0.85rem', fontWeight: '700', cursor: 'pointer',
+                  padding: '0.5rem 1rem', borderRadius: '8px', border: 'none',
+                  fontSize: '0.7rem', fontWeight: '900', cursor: 'pointer',
                   background: inputTab === tab.id ? 'var(--accent)' : 'transparent',
-                  color: inputTab === tab.id ? 'white' : 'var(--text-secondary)',
-                  transition: '0.2s'
+                  color: inputTab === tab.id ? 'white' : 'var(--text-muted)',
+                  transition: '0.2s', letterSpacing: '1px'
                 }}
               >
                 {tab.label}
@@ -196,8 +196,8 @@ export default function SyllabusAnalyzer() {
           {inputTab === 'text' ? (
             <textarea
               className="input-field"
-              style={{ minHeight: '180px', borderRadius: '20px', padding: '1.5rem', fontSize: '1rem' }}
-              placeholder="Paste syllabus text here..."
+              style={{ minHeight: '150px', borderRadius: '16px', padding: '1.25rem', fontSize: '0.95rem', marginBottom: 0 }}
+              placeholder="Paste syllabus text here for AI decomposition..."
               value={syllabusText}
               onChange={e => setSyllabusText(e.target.value)}
             />
@@ -206,22 +206,28 @@ export default function SyllabusAnalyzer() {
               onClick={() => !parsing && fileInputRef.current?.click()}
               style={{
                 border: `2px dashed var(--border)`,
-                borderRadius: '20px',
-                padding: '3rem',
+                borderRadius: '16px',
+                padding: 'clamp(1.5rem, 5vw, 3rem)',
                 textAlign: 'center',
                 cursor: 'pointer',
                 background: 'var(--bg-secondary)',
-                minHeight: '180px',
+                minHeight: '150px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '1rem'
+                gap: '1rem',
+                transition: '0.3s'
               }}
             >
               <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={e => handleFileSelect(e.target.files?.[0] as File)} />
-              {parsing ? <Loader2 size={32} className="spin" color="var(--accent)" /> : <Upload size={32} color="var(--accent)" />}
-              <p style={{ margin: 0, fontWeight: '700' }}>{pdfFile ? pdfFile.name : 'Click to upload syllabus'}</p>
+              {parsing ? <Loader2 size={28} className="spin" color="var(--accent)" /> : <Upload size={28} color="var(--accent)" />}
+              <div style={{ minWidth: 0, maxWidth: '100%' }}>
+                <p style={{ margin: 0, fontWeight: '800', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {pdfFile ? pdfFile.name : 'Tap to upload syllabus'}
+                </p>
+                <p style={{ margin: '4px 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>PDF, PNG, JPG supported</p>
+              </div>
             </div>
           )}
 
@@ -229,15 +235,15 @@ export default function SyllabusAnalyzer() {
             className="btn-primary"
             onClick={analyzeSyllabus}
             disabled={loading || !syllabusText}
-            style={{ width: '100%', padding: '1rem', marginTop: '1.5rem', borderRadius: '16px' }}
+            style={{ width: '100%', padding: '0.9rem', marginTop: '1.25rem', borderRadius: '14px', fontSize: '0.9rem', fontWeight: '900', letterSpacing: '1px' }}
           >
-            {loading ? <Loader2 size={20} className="spin" /> : <Sparkles size={20} />}
-            {loading ? 'Analyzing...' : 'Generate Subject Graph'}
+            {loading ? <Loader2 size={18} className="spin" /> : <Sparkles size={18} />}
+            {loading ? 'ANALYZING...' : 'GENERATE GRAPH'}
           </button>
         </div>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(2rem, 8vh, 4rem)' }}>
         {Object.entries(
           persistentTopics.reduce((acc: any, topic) => {
             const subject = topic.subjectName || "Unassigned";
@@ -247,12 +253,12 @@ export default function SyllabusAnalyzer() {
           }, {})
         ).map(([subject, topics]: [string, any]) => (
           <div key={subject}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 900, margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Book size={24} color="var(--accent)" /> {subject}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: '900', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Book size={22} color="var(--accent)" /> {subject}
               </h2>
-              <Link href={`/dashboard/mock-exam?subject=${encodeURIComponent(subject)}`} className="btn-primary" style={{ padding: '0.6rem 1.2rem', fontSize: '0.85rem' }}>
-                <Sparkles size={16} /> Practice Mock Test
+              <Link href={`/dashboard/mock-exam?subject=${encodeURIComponent(subject)}`} className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.75rem', fontWeight: '800' }}>
+                <Sparkles size={14} /> PRACTICE TEST
               </Link>
             </div>
 
@@ -268,36 +274,36 @@ export default function SyllabusAnalyzer() {
                         setDeleteId(topic.id);
                       }}
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={12} />
                     </button>
 
                     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div>
                         <div style={{
-                          width: '40px',
-                          height: '40px',
+                          width: '36px',
+                          height: '36px',
                           background: topic.difficulty === 'Hard' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                          borderRadius: '12px',
+                          borderRadius: '10px',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          marginBottom: '1rem'
+                          marginBottom: '0.75rem'
                         }}>
-                          {topic.difficulty === 'Hard' ? <AlertTriangle size={20} color="var(--danger)" /> : <CheckCircle2 size={20} color="var(--success)" />}
+                          {topic.difficulty === 'Hard' ? <AlertTriangle size={18} color="var(--danger)" /> : <CheckCircle2 size={18} color="var(--success)" />}
                         </div>
-                        <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.3 }}>
+                        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: '800', color: 'var(--text-primary)', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                           {topic.topicName}
                         </h3>
-                        <p style={{ margin: '8px 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                          {topic.subtopics.length} Key Concepts
+                        <p style={{ margin: '6px 0 0', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '700' }}>
+                          {topic.subtopics.length} CONCEPTS
                         </p>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
-                        <span style={{ fontSize: '0.7rem', fontWeight: 800, color: topic.difficulty === 'Hard' ? 'var(--danger)' : 'var(--success)', letterSpacing: '1px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                        <span style={{ fontSize: '0.6rem', fontWeight: '900', color: topic.difficulty === 'Hard' ? 'var(--danger)' : 'var(--success)', letterSpacing: '1px' }}>
                           {topic.difficulty.toUpperCase()}
                         </span>
-                        <ArrowRight size={18} color="var(--text-secondary)" />
+                        <ArrowRight size={16} color="var(--text-muted)" />
                       </div>
                     </div>
                   </div>
@@ -310,18 +316,18 @@ export default function SyllabusAnalyzer() {
 
       {/* Custom Delete Modal */}
       {(deleteId || clearingAll) && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
           <div className="glass-card fade-in-up" style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '2rem', borderRadius: '24px', border: '1px solid var(--danger-glow)' }}>
-            <div style={{ background: 'var(--danger-glow)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--danger)' }}>
-              <AlertTriangle size={30} />
+            <div style={{ background: 'var(--danger-glow)', width: '50px', height: '50px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', color: 'var(--danger)' }}>
+              <AlertTriangle size={24} />
             </div>
-            <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem', fontWeight: 900 }}>Dangerous Action</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '2rem' }}>
+            <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem', fontWeight: 900 }}>Dangerous Action</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
               {clearingAll ? 'Are you sure you want to PERMANENTLY clear your entire knowledge graph?' : 'Are you sure you want to remove this subject card?'}
             </p>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button className="btn-secondary" style={{ flex: 1 }} onClick={() => { setDeleteId(null); setClearingAll(false); }}>Cancel</button>
-              <button className="btn-primary" style={{ flex: 1, background: 'var(--danger)', boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)' }} onClick={() => clearingAll ? clearAllTopics() : handleDelete(deleteId!)}>Confirm Delete</button>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button className="btn-secondary" style={{ flex: 1, fontSize: '0.85rem', padding: '0.75rem' }} onClick={() => { setDeleteId(null); setClearingAll(false); }}>Cancel</button>
+              <button className="btn-primary" style={{ flex: 1, fontSize: '0.85rem', padding: '0.75rem', background: 'var(--danger)', boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)' }} onClick={() => clearingAll ? clearAllTopics() : handleDelete(deleteId!)}>Delete</button>
             </div>
           </div>
         </div>
@@ -330,24 +336,25 @@ export default function SyllabusAnalyzer() {
       <style jsx global>{`
         .syllabus-square-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-          gap: 1.5rem;
+          grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+          gap: 1rem;
         }
 
         .square-card {
-          aspect-ratio: 1 / 1;
+          min-height: 220px;
           position: relative;
           cursor: pointer;
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          padding: 1.75rem !important;
+          padding: 1.25rem !important;
           border: 1px solid var(--border);
           overflow: hidden;
+          border-radius: 20px;
         }
 
         .square-card:hover {
-          transform: translateY(-6px);
+          transform: translateY(-4px);
           border-color: rgba(129, 140, 248, 0.3) !important;
-          box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4) !important;
+          box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4) !important;
         }
 
         .square-card::before {
@@ -370,9 +377,9 @@ export default function SyllabusAnalyzer() {
           background: rgba(239, 68, 68, 0.1);
           border: none;
           color: var(--danger);
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
+          width: 26px;
+          height: 26px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -380,6 +387,10 @@ export default function SyllabusAnalyzer() {
           opacity: 0;
           transition: 0.2s;
           z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+          .delete-btn { opacity: 1; background: var(--bg-secondary); border: 1px solid var(--border); }
         }
 
         .square-card:hover .delete-btn {
@@ -393,9 +404,10 @@ export default function SyllabusAnalyzer() {
 
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
+
     </div>
   );
 }

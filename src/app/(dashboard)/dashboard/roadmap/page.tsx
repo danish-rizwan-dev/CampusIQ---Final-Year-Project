@@ -152,75 +152,76 @@ export default function RoadmapPage() {
 
   if (!userData?.roadmaps || userData.roadmaps.length === 0) {
     return (
-      <div style={{ maxWidth: '600px', margin: '4rem auto', padding: '1rem' }}>
-        <div className="glass-card" style={{ padding: '3rem', borderRadius: '32px', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', padding: '1.5rem', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
-            <MapIcon size={48} color="var(--accent)" />
+      <div style={{ maxWidth: '600px', margin: 'clamp(1rem, 5vh, 4rem) auto', padding: '1rem' }}>
+        <div className="glass-card" style={{ padding: 'clamp(1.5rem, 5vw, 3rem)', borderRadius: '32px', textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', padding: 'clamp(1rem, 3vw, 1.5rem)', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
+            <MapIcon size={40} color="var(--accent)" />
           </div>
-          <h1 className="gradient-text" style={{ fontSize: '2.5rem', margin: '0 0 1rem' }}>Setup Your Roadmap</h1>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Define your goals and we'll generate a semester-by-semester plan using the state-of-the-art Gemini 3 Flash Preview.</p>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', margin: '0 0 1rem', lineHeight: 1.1 }}>Setup Your Roadmap</h1>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '0.9rem' }}>Define your goals and we'll generate a semester-by-semester plan using AI.</p>
           
-          <form onSubmit={(e) => handleGenerateRoadmap(e)} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'left' }}>
+          <form onSubmit={(e) => handleGenerateRoadmap(e)} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left' }}>
             <div className="responsive-grid-2" style={{ gap: '1rem' }}>
               <div>
-                <label style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Target Course</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Target Course</label>
                 <input
                   type="text"
                   className="input-field"
                   required
-                  placeholder="e.g. B.Tech CSE, BCA"
+                  placeholder="e.g. B.Tech CSE"
                   value={setupData.targetCourse}
                   onChange={e => setSetupData({ ...setupData, targetCourse: e.target.value })}
+                  style={{ marginBottom: 0 }}
                 />
               </div>
               <div>
-                <label style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Course Duration</label>
-                <select className="input-field text-center" value={setupData.durationYears} onChange={e => setSetupData({ ...setupData, durationYears: Number(e.target.value) })}>
+                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Course Duration</label>
+                <select className="input-field text-center" value={setupData.durationYears} onChange={e => setSetupData({ ...setupData, durationYears: Number(e.target.value) })} style={{ marginBottom: 0 }}>
                   {[1, 2, 3, 4, 5].map(y => <option key={y} value={y}>{y} Year{y > 1 ? 's' : ''}</option>)}
                 </select>
               </div>
             </div>
 
-            <div className="responsive-grid-2" style={{ gap: '1rem' }}>
-              <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Desired Tech Career Goal</label>
-                <input
-                  type="text"
-                  className="input-field"
-                  required
-                  placeholder="e.g. Fullstack Developer, Data Scientist"
-                  value={setupData.targetCareer}
-                  onChange={e => setSetupData({ ...setupData, targetCareer: e.target.value })}
-                />
-              </div>
+            <div>
+              <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Desired Tech Career Goal</label>
+              <input
+                type="text"
+                className="input-field"
+                required
+                placeholder="e.g. Fullstack Developer"
+                value={setupData.targetCareer}
+                onChange={e => setSetupData({ ...setupData, targetCareer: e.target.value })}
+                style={{ marginBottom: 0 }}
+              />
             </div>
 
             <div className="responsive-grid-2" style={{ gap: '1rem' }}>
               <div>
-                <label style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Skill Level</label>
-                <select className="input-field" value={setupData.skillLevel} onChange={e => setSetupData({ ...setupData, skillLevel: e.target.value })}>
+                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Skill Level</label>
+                <select className="input-field" value={setupData.skillLevel} onChange={e => setSetupData({ ...setupData, skillLevel: e.target.value })} style={{ marginBottom: 0 }}>
                   <option>Beginner</option>
                   <option>Intermediate</option>
                   <option>Advanced</option>
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Study Hours / Week</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Study Hours / Week</label>
                 <input
                   type="number"
                   className="input-field"
                   min={1} max={168}
                   value={setupData.availableHours}
                   onChange={e => setSetupData({ ...setupData, availableHours: Number(e.target.value) })}
+                  style={{ marginBottom: 0 }}
                 />
               </div>
             </div>
 
-            <button type="submit" disabled={generating} className="btn-primary" style={{ padding: '1rem', fontSize: '1rem', marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <button type="submit" disabled={generating} className="btn-primary" style={{ padding: '1rem', fontSize: '0.9rem', marginTop: '1rem', width: '100%' }}>
               {generating ? (
-                <><Loader2 size={20} className="spin" /> AI Is Constructing Your Roadmap...</>
+                <><Loader2 size={18} className="spin" style={{ marginRight: '8px' }} /> Architecting...</>
               ) : (
-                <><Plus size={20} /> Generate Personalized Roadmap</>
+                <><Plus size={18} style={{ marginRight: '8px' }} /> Generate Roadmap</>
               )}
             </button>
           </form>
@@ -240,19 +241,19 @@ export default function RoadmapPage() {
   const recommendations = userData?.careerProfile?.fullAssessmentResult?.recommendations || [];
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '1rem' }}>
-      <header style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: '0 0 0.25rem' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 clamp(0.5rem, 3vw, 1rem) 2rem' }}>
+      <header style={{ marginBottom: 'clamp(1.5rem, 5vh, 2.5rem)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ flex: '1 1 300px' }}>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', margin: '0 0 0.5rem', lineHeight: 1.1 }}>
             {user?.firstName}'s Study Plan
           </h1>
-          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '1rem' }}>
+          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: 'clamp(0.85rem, 1.2vw, 1rem)', lineHeight: 1.5 }}>
              <strong style={{ color: 'var(--text-primary)' }}>{targetCourse}</strong>
             &nbsp;•&nbsp;
             Goal: <strong style={{ color: 'var(--text-primary)' }}>{careerTarget}</strong>
             &nbsp;•&nbsp;
             <span style={{ color: 'var(--accent)', fontWeight: '700' }}>
-              {completedSems} / {totalSems} Semesters Done
+              {completedSems}/{totalSems} Semesters
             </span>
           </p>
         </div>
@@ -268,19 +269,19 @@ export default function RoadmapPage() {
             setShowRegenerateModal(true);
           }}
           className="btn-secondary"
-          style={{ padding: '0.75rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: '12px', fontSize: '0.85rem' }}
+          style={{ padding: '0.6rem 1.25rem', borderRadius: '12px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
         >
-          <RefreshCw size={18} /> Regenerate Roadmap
+          <RefreshCw size={16} style={{ marginRight: '8px' }} /> Regenerate
         </button>
       </header>
 
       {/* Progress bar */}
       <div style={{ marginBottom: '3rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '700' }}>
-          <span>Semester 1</span>
-          <span>Semester {totalSems}</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '800', letterSpacing: '1px' }}>
+          <span>SEM 1</span>
+          <span>SEM {totalSems}</span>
         </div>
-        <div style={{ background: 'var(--border)', borderRadius: '10px', height: '12px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+        <div style={{ background: 'var(--bg-secondary)', borderRadius: '10px', height: '10px', overflow: 'hidden', border: '1px solid var(--border)' }}>
           <div style={{
             width: `${(completedSems / totalSems) * 100}%`,
             height: '100%',
@@ -295,19 +296,11 @@ export default function RoadmapPage() {
       {/* Timeline */}
       <div className="roadmap-timeline">
         {uniqueRoadmaps.sort((a: any, b: any) => a.semesterNumber - b.semesterNumber).map((semester: any) => (
-          <div key={semester.id} style={{ position: 'relative', marginBottom: '3rem' }}>
+          <div key={semester.id} style={{ position: 'relative', marginBottom: 'clamp(2rem, 5vh, 3.5rem)' }}>
             {/* Timeline dot */}
-            <div style={{
-              position: 'absolute',
-              left: '-3.1rem',
-              top: '1.75rem',
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              background: semester.status === 'COMPLETED' ? 'var(--success)' : (semester.status === 'ACTIVE' ? 'var(--accent)' : 'var(--bg-primary)'),
-              border: `4px solid var(--bg-primary)`,
-              boxShadow: semester.status === 'ACTIVE' ? '0 0 10px var(--accent-glow)' : 'none',
-              transition: 'all 0.3s',
+            <div className="timeline-dot" style={{
+              background: semester.status === 'COMPLETED' ? 'var(--success)' : (semester.status === 'ACTIVE' ? 'var(--accent)' : 'var(--bg-secondary)'),
+              boxShadow: semester.status === 'ACTIVE' ? '0 0 15px var(--accent)' : 'none',
             }} />
 
             <SemesterCard
@@ -326,18 +319,15 @@ export default function RoadmapPage() {
         {Array.from({ length: Math.max(0, totalSems - uniqueRoadmaps.length) }, (_, i) => {
           const semNum = uniqueRoadmaps.length + i + 1;
           return (
-            <div key={`locked-${i}`} style={{ position: 'relative', marginBottom: '3rem', opacity: 0.4 }}>
-              <div style={{
-                position: 'absolute', left: '-3.1rem', top: '1.75rem', width: '20px', height: '20px',
-                borderRadius: '50%', background: 'var(--bg-secondary)', border: `4px solid var(--bg-primary)`,
-              }} />
-              <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ padding: '0.75rem', borderRadius: '12px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
-                  <Lock size={20} />
+            <div key={`locked-${i}`} style={{ position: 'relative', marginBottom: 'clamp(2rem, 5vh, 3rem)', opacity: 0.5 }}>
+              <div className="timeline-dot" style={{ background: 'var(--bg-secondary)' }} />
+              <div className="glass-card" style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ padding: '0.6rem', borderRadius: '10px', background: 'var(--bg-secondary)', color: 'var(--text-muted)' }}>
+                  <Lock size={18} />
                 </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-secondary)' }}>Semester {semNum}</h3>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Complete previous semester to unlock</p>
+                <div style={{ minWidth: 0 }}>
+                  <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-muted)', fontWeight: '800' }}>Semester {semNum}</h3>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>LOCKED</p>
                 </div>
               </div>
             </div>
@@ -358,24 +348,23 @@ export default function RoadmapPage() {
 
       {showRegenerateModal && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div className="glass-card fade-in-up" style={{ width: '100%', maxWidth: '550px', padding: '2.5rem', borderRadius: '32px', border: '1px solid var(--accent)' }}>
+          <div className="glass-card fade-in-up" style={{ width: '100%', maxWidth: '550px', padding: 'clamp(1.5rem, 5vw, 2.5rem)', borderRadius: '24px', border: '1px solid var(--accent)', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
                 <div>
-                    <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.8rem' }}>Intelligent Regeneration</h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-                        Choose your next path. Overwriting will reset your progress.
+                    <h2 style={{ margin: '0 0 0.5rem 0', fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', fontWeight: '900' }}>Regeneration</h2>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>
+                        Choose your next path. This will reset your progress.
                     </p>
                 </div>
-                <button onClick={() => setShowRegenerateModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-                    <Plus size={24} style={{ transform: 'rotate(45deg)' }} />
+                <button onClick={() => setShowRegenerateModal(false)} style={{ background: 'var(--bg-secondary)', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '6px', borderRadius: '8px' }}>
+                    <Plus size={20} style={{ transform: 'rotate(45deg)' }} />
                 </button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {/* AI Recommendations Section */}
                 {recommendations.length > 0 && (
                     <div>
-                        <label style={{ fontSize: '0.8rem', fontWeight: '800', opacity: 0.6, marginBottom: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '1px' }}>AI Recommended Paths</label>
+                        <label style={{ fontSize: '0.65rem', fontWeight: '900', color: 'var(--accent)', marginBottom: '1rem', display: 'block', textTransform: 'uppercase', letterSpacing: '1px' }}>AI Recommended Paths</label>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                             {recommendations.map((rec: any, i: number) => (
                                 <button 
@@ -383,32 +372,31 @@ export default function RoadmapPage() {
                                     onClick={() => handleQuickSelect(rec.title)}
                                     disabled={generating}
                                     style={{ 
-                                        width: '100%', padding: '1.25rem', textAlign: 'left', background: 'var(--bg-secondary)', 
+                                        width: '100%', padding: 'clamp(1rem, 3vw, 1.25rem)', textAlign: 'left', background: 'var(--bg-secondary)', 
                                         border: `1px solid ${selectedPath === rec.title ? 'var(--accent)' : 'var(--border)'}`, 
-                                        borderRadius: '20px', cursor: 'pointer', transition: '0.3s',
-                                        display: 'flex', alignItems: 'center', gap: '1.25rem' 
+                                        borderRadius: '16px', cursor: 'pointer', transition: '0.3s',
+                                        display: 'flex', alignItems: 'center', gap: '1rem' 
                                     }}
                                     className="hover-card"
                                 >
-                                    <div style={{ width: '45px', height: '45px', background: 'var(--accent-glow)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        {selectedPath === rec.title ? <Loader2 size={24} className="spin" color="var(--accent)" /> : <Sparkles size={24} color="var(--accent)" />}
+                                    <div style={{ width: '40px', height: '40px', background: 'var(--accent-glow)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        {selectedPath === rec.title ? <Loader2 size={20} className="spin" color="var(--accent)" /> : <Sparkles size={20} color="var(--accent)" />}
                                     </div>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: '800', fontSize: '1.1rem', color: selectedPath === rec.title ? 'var(--accent)' : 'var(--text-primary)' }}>{rec.title}</div>
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>{rec.confidence}% AI Compatibility Match</div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ fontWeight: '800', fontSize: '1rem', color: selectedPath === rec.title ? 'var(--accent)' : 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{rec.title}</div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>{rec.confidence}% Match</div>
                                     </div>
-                                    <ChevronRight size={20} color="var(--text-secondary)" style={{ opacity: selectedPath === rec.title ? 0 : 1 }} />
+                                    <ChevronRight size={18} color="var(--text-muted)" style={{ opacity: selectedPath === rec.title ? 0 : 0.5, flexShrink: 0 }} />
                                 </button>
                             ))}
                         </div>
                     </div>
                 )}
 
-                {/* Manual Section */}
                 <div>
                     <button 
                         onClick={() => setShowManualForm(!showManualForm)} 
-                        style={{ background: 'none', border: 'none', color: 'var(--accent)', fontWeight: '700', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: 0 }}
+                        style={{ background: 'none', border: 'none', color: 'var(--accent)', fontWeight: '800', fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: 0 }}
                     >
                         {showManualForm ? 'Hide Manual Setup' : 'Custom Career Goal?'} <Target size={16} />
                     </button>
@@ -417,45 +405,47 @@ export default function RoadmapPage() {
                         <div className="fade-in" style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)' }}>
                              <form onSubmit={(e) => handleGenerateRoadmap(e, true)} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                                 <div>
-                                    <label style={{ fontSize: '0.8rem', fontWeight: '800', opacity: 0.6 }}>Any Career You Desire</label>
+                                    <label style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)' }}>Any Career You Desire</label>
                                     <input
                                         type="text"
                                         className="input-field"
                                         required
-                                        placeholder="e.g. Blockchain Developer, AI Researcher"
+                                        placeholder="e.g. AI Researcher"
                                         value={setupData.targetCareer}
                                         onChange={e => setSetupData({ ...setupData, targetCareer: e.target.value })}
+                                        style={{ marginBottom: 0 }}
                                     />
                                 </div>
                                 <div className="responsive-grid-2" style={{ gap: '1rem' }}>
                                     <div>
-                                        <label style={{ fontSize: '0.8rem', fontWeight: '800', opacity: 0.6 }}>Course</label>
+                                        <label style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)' }}>Course</label>
                                         <input
                                             type="text"
                                             className="input-field"
                                             required
                                             value={setupData.targetCourse}
                                             onChange={e => setSetupData({ ...setupData, targetCourse: e.target.value })}
+                                            style={{ marginBottom: 0 }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '0.8rem', fontWeight: '800', opacity: 0.6 }}>Duration</label>
-                                        <select className="input-field text-center" value={setupData.durationYears} onChange={e => setSetupData({ ...setupData, durationYears: Number(e.target.value) })}>
+                                        <label style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)' }}>Duration</label>
+                                        <select className="input-field text-center" value={setupData.durationYears} onChange={e => setSetupData({ ...setupData, durationYears: Number(e.target.value) })} style={{ marginBottom: 0 }}>
                                             {[1, 2, 3, 4, 5].map(y => <option key={y} value={y}>{y} Year{y > 1 ? 's' : ''}</option>)}
                                         </select>
                                     </div>
                                 </div>
-                                <button type="submit" disabled={generating} className="btn-primary" style={{ width: '100%', padding: '1rem', marginTop: '0.5rem' }}>
-                                    {generating ? <Loader2 className="spin" /> : 'Generate Manual Path'}
+                                <button type="submit" disabled={generating} className="btn-primary" style={{ width: '100%', padding: '1rem', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+                                    {generating ? <Loader2 className="spin" size={20} /> : 'Generate Manual Path'}
                                 </button>
                              </form>
                         </div>
                     )}
                 </div>
 
-                <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                    <Link href="/dashboard/career" className="btn-secondary" style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: '1rem', borderRadius: '16px', fontSize: '0.9rem', gap: '10px' }}>
-                        <BrainCircuit size={18} /> Explore New Career Paths
+                <div style={{ marginTop: '0.5rem' }}>
+                    <Link href="/dashboard/career" className="btn-secondary" style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: '1rem', borderRadius: '16px', fontSize: '0.85rem', gap: '10px' }}>
+                        <BrainCircuit size={18} /> Explore Career Paths
                     </Link>
                 </div>
             </div>
@@ -470,16 +460,21 @@ export default function RoadmapPage() {
         .hover-card:hover { border-color: var(--accent) !important; background: var(--accent-glow) !important; }
         .roadmap-timeline {
           position: relative;
-          padding-left: 2.5rem;
+          padding-left: clamp(1.5rem, 5vw, 2.5rem);
           border-left: 2px solid var(--border);
-          margin-left: 1rem;
+          margin-left: clamp(0.5rem, 3vw, 1.5rem);
           transition: all 0.3s ease;
         }
-        @media (max-width: 600px) {
-          .roadmap-timeline {
-            padding-left: 1.5rem;
-            margin-left: 0.5rem;
-          }
+        .timeline-dot {
+          position: absolute;
+          left: calc(-1 * clamp(1.5rem, 5vw, 2.5rem) - 9px);
+          top: 1.75rem;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 4px solid var(--bg-primary);
+          transition: all 0.3s;
+          z-index: 1;
         }
       `}</style>
     </div>

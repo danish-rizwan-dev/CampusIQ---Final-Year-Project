@@ -305,7 +305,14 @@ label {
 @media (max-width: 768px) {
   .responsive-grid-2 {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
+}
+
+.responsive-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
 /* 3+ column auto-fit layout */
@@ -339,8 +346,14 @@ label {
 /* Utility for stacking flex rows on mobile */
 .stack-on-mobile {
   display: flex;
-  gap: 1rem;
-  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .stack-on-mobile {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
 }
 
 /* Page header with title + actions */
@@ -491,7 +504,8 @@ label {
 
   /* Stack-on-mobile rows go vertical */
   .stack-on-mobile {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch !important;
   }
 
   /* Show sidebar overlay on mobile */

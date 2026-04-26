@@ -104,16 +104,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* --- MOBILE NAV --- */}
         <nav className="mobile-bottom-nav">
-            {navLinks.map((link) => {
+            {[
+              { name: 'Home', path: '/dashboard', icon: LayoutDashboard },
+              { name: 'Roadmap', path: '/dashboard/roadmap', icon: Map },
+              { name: 'Assistant', path: '/dashboard/assistant', icon: MessageSquare },
+              { name: 'Career', path: '/dashboard/career', icon: Target },
+            ].map((link) => {
                 const isActive = pathname === link.path;
                 const Icon = link.icon;
                 return (
                     <Link key={link.path} href={link.path} className={`bottom-nav-item ${isActive ? 'active' : ''}`}>
-                        <Icon size={20} />
+                        <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
                         {isActive && <div className="active-dot" />}
+                        <span style={{ fontSize: '0.6rem', fontWeight: isActive ? '900' : '600', marginTop: '4px', opacity: isActive ? 1 : 0.6 }}>{link.name.toUpperCase()}</span>
                     </Link>
                 );
             })}
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="bottom-nav-item"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+                <Menu size={20} />
+                <span style={{ fontSize: '0.6rem', fontWeight: '600', marginTop: '4px', opacity: 0.6 }}>MENU</span>
+            </button>
         </nav>
       </div>
 
@@ -121,11 +135,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         .main-stage {
             flex: 1;
             overflow-y: auto;
-            padding: 1rem clamp(1rem, 3vw, 1.5rem) 4rem;
+            padding: 1rem clamp(0.75rem, 3vw, 1.5rem) 6rem;
         }
 
         .current-page-title {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 900;
             letter-spacing: 2px;
             margin: 0;
@@ -145,19 +159,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             display: none;
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            height: 70px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
+            height: clamp(65px, 10vh, 75px);
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(25px);
             border-top: 1px solid var(--border);
             justify-content: space-around;
             align-items: center;
             z-index: 1000;
+            padding: 0 0.5rem;
         }
 
         .bottom-nav-item {
             color: var(--text-secondary);
-            padding: 12px;
+            padding: 8px;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            flex: 1;
+            max-width: 80px;
         }
 
         .bottom-nav-item.active {
@@ -166,11 +188,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         .active-dot {
             position: absolute;
-            bottom: 4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
+            top: 2px;
+            width: 3px;
+            height: 3px;
             background: var(--accent-neon);
             border-radius: 50%;
             box-shadow: 0 0 10px var(--accent-neon);
@@ -178,17 +198,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         .hamburger-btn {
             display: none;
-            background: transparent;
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             padding: 8px;
-            border-radius: 8px;
+            border-radius: 10px;
             color: var(--text-primary);
         }
 
         @media (max-width: 768px) {
-            .hamburger-btn { display: flex; }
+            .hamburger-btn { display: none; } /* Using Bottom Nav Menu instead */
             .mobile-bottom-nav { display: flex; }
-            .main-stage { padding: 1.5rem 1rem 100px; }
+            .main-stage { padding: 1.25rem 0.75rem 100px; }
             .page-breadcrumb { display: none; }
         }
 

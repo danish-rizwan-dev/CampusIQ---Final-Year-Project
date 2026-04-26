@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Copy, Sparkles } from 'lucide-react';
+import { Send, Bot, User, Loader2, Copy, Sparkles, Target } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Message {
@@ -193,26 +193,27 @@ export default function StudyAssistant() {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      height: 'calc(100vh - 160px)',
-      gap: '1rem'
+      height: 'calc(var(--vh, 1vh) * 100 - clamp(140px, 20vh, 180px))',
+      gap: 'clamp(0.75rem, 2vh, 1.25rem)',
+      padding: '0 clamp(0.5rem, 3vw, 1rem)'
     }}>
 
       {/* HEADER */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: 0 }}>AI Assistant</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
-            History saved automatically · Structured answers enabled
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ flex: '1 1 250px' }}>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.8rem)', margin: 0, lineHeight: 1.1 }}>AI Assistant</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.2rem', fontWeight: '700', letterSpacing: '0.5px' }}>
+            NEURAL ENGINE ACTIVE · CONTEXT AWARE
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Sparkles size={16} color="var(--accent)" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-secondary)', padding: '4px 8px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <Sparkles size={14} color="var(--accent)" />
           <select
             value={topic}
             onChange={e => setTopic(e.target.value)}
             className="input-field"
-            style={{ padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '0.9rem' }}
+            style={{ padding: '0.4rem 0.6rem', borderRadius: '8px', fontSize: '0.8rem', marginBottom: 0, background: 'transparent', border: 'none', width: 'auto', fontWeight: '700' }}
           >
             <option>Computer Science</option>
             <option>Data Structures</option>
@@ -220,7 +221,6 @@ export default function StudyAssistant() {
             <option>Software Engineering</option>
             <option>Operating Systems</option>
             <option>Computer Networks</option>
-            <option>Database Management</option>
             <option>Mathematics</option>
           </select>
         </div>
@@ -232,101 +232,103 @@ export default function StudyAssistant() {
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.25rem',
-        padding: '1.5rem',
+        gap: '1rem',
+        padding: 'clamp(1rem, 4vw, 1.5rem)',
         borderRadius: '24px',
+        border: '1px solid var(--border)'
       }}>
         {messages.map((msg, idx) => (
           <div key={idx} style={{
             display: 'flex',
-            gap: '0.85rem',
+            gap: '0.75rem',
             flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
             alignItems: 'flex-start',
           }}>
 
             {/* AVATAR */}
             <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: 12,
+              width: 32,
+              height: 32,
+              borderRadius: '10px',
               flexShrink: 0,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               background: msg.role === 'user' ? 'var(--accent)' : 'var(--bg-secondary)',
-              border: msg.role === 'assistant' ? '1px solid rgba(255,255,255,0.08)' : 'none',
+              border: msg.role === 'assistant' ? '1px solid var(--border)' : 'none',
+              marginTop: '4px'
             }}>
               {msg.role === 'user'
-                ? <User size={18} color="#fff" />
-                : <Bot size={18} color="var(--accent)" />}
+                ? <User size={16} color="#fff" />
+                : <Bot size={16} color="var(--accent)" />}
             </div>
 
             {/* BUBBLE */}
             <div style={{
-              maxWidth: '78%',
-              padding: msg.role === 'user' ? '0.75rem 1.1rem' : '1rem 1.25rem',
+              maxWidth: '85%',
+              padding: msg.role === 'user' ? '0.75rem 1rem' : '1rem',
               borderRadius: msg.role === 'user' ? '18px 6px 18px 18px' : '6px 18px 18px 18px',
               background: msg.role === 'user' ? 'var(--accent-glow)' : 'var(--bg-secondary)',
               color: 'var(--text-primary)',
               position: 'relative',
-              border: msg.role === 'user' ? '1px solid var(--accent)' : '1px solid var(--border)',
+              border: '1px solid var(--border)',
               boxShadow: 'var(--card-shadow)',
             }}>
 
               {msg.role === 'user' ? (
-                <p style={{ margin: 0, lineHeight: '1.6', fontSize: '0.93rem' }}>
+                <p style={{ margin: 0, lineHeight: '1.5', fontSize: '0.9rem', fontWeight: '500' }}>
                   {msg.content}
                 </p>
               ) : (
                 <FormattedMessage content={msg.content} />
               )}
 
-              {/* COPY BUTTON — assistant only */}
               {msg.role === 'assistant' && (
                 <button
                   onClick={() => copyToClipboard(msg.content)}
                   title="Copy response"
                   style={{
                     position: 'absolute',
-                    top: '0.5rem',
-                    right: '-2rem',
-                    background: 'transparent',
-                    border: 'none',
+                    bottom: '-0.5rem',
+                    right: '0',
+                    background: 'var(--bg-primary)',
+                    border: '1px solid var(--border)',
                     cursor: 'pointer',
-                    opacity: 0.5,
-                    transition: 'opacity 0.2s',
-                    padding: '0.25rem',
+                    opacity: 0.8,
+                    borderRadius: '6px',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    transform: 'translateY(100%)',
+                    zIndex: 2
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                  onMouseLeave={e => (e.currentTarget.style.opacity = '0.5')}
                 >
-                  <Copy size={14} />
+                  <Copy size={12} color="var(--text-muted)" />
                 </button>
               )}
             </div>
           </div>
         ))}
 
-        {/* TYPING INDICATOR */}
         {loading && (
-          <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
             <div style={{
-              width: 36, height: 36, borderRadius: 12,
+              width: 32, height: 32, borderRadius: '10px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: 'var(--bg-secondary)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              border: '1px solid var(--border)',
             }}>
-              <Bot size={18} color="var(--accent)" />
+              <Bot size={16} color="var(--accent)" />
             </div>
             <div style={{
-              padding: '0.75rem 1.1rem',
+              padding: '0.75rem 1rem',
               borderRadius: '6px 18px 18px 18px',
               background: 'var(--bg-secondary)',
-              display: 'flex', alignItems: 'center', gap: '0.4rem',
+              display: 'flex', alignItems: 'center', gap: '0.3rem',
             }}>
               {[0, 1, 2].map(i => (
                 <div key={i} style={{
-                  width: 6, height: 6, borderRadius: '50%',
+                  width: 5, height: 5, borderRadius: '50%',
                   background: 'var(--accent)',
                   animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
                 }} />
@@ -341,28 +343,32 @@ export default function StudyAssistant() {
       {/* INPUT BAR */}
       <div style={{
         display: 'flex',
-        gap: '0.75rem',
-        padding: '0.75rem',
+        gap: '0.6rem',
+        padding: '0.6rem',
         background: 'var(--bg-secondary)',
-        borderRadius: '20px',
-        border: '1px solid rgba(255,255,255,0.06)',
+        borderRadius: '18px',
+        border: '1px solid var(--border)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
       }}>
         <textarea
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask a question... (Enter to send, Shift+Enter for new line)"
+          placeholder="Ask a question..."
           rows={1}
           style={{
             flex: 1,
             resize: 'none',
-            padding: '0.65rem 0.9rem',
+            padding: '0.6rem 0.8rem',
             borderRadius: '12px',
-            fontSize: '0.93rem',
+            fontSize: '0.9rem',
             lineHeight: '1.5',
             minHeight: '40px',
-            maxHeight: '120px',
+            maxHeight: '100px',
             overflowY: 'auto',
+            background: 'var(--bg-primary)',
+            border: '1px solid var(--border)',
+            color: 'var(--text-primary)'
           }}
         />
 
@@ -371,23 +377,28 @@ export default function StudyAssistant() {
           disabled={loading || !input.trim()}
           className="btn-primary"
           style={{
-            padding: '0.65rem 1.1rem',
+            width: '44px',
+            height: '44px',
             borderRadius: '12px',
-            opacity: loading || !input.trim() ? 0.5 : 1,
-            transition: 'opacity 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            padding: 0
           }}
         >
           {loading
-            ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+            ? <Loader2 size={18} className="spin" />
             : <Send size={18} />}
         </button>
       </div>
 
-      {/* Bounce animation for typing dots */}
-      <style>{`
+      <style jsx>{`
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes bounce {
           0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-          40% { transform: translateY(-6px); opacity: 1; }
+          40% { transform: translateY(-4px); opacity: 1; }
         }
       `}</style>
     </div>
