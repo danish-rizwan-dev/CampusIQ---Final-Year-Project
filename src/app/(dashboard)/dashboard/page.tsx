@@ -1,10 +1,10 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { 
-  CheckCircle, Clock, TrendingUp, Calendar, 
-  Loader2, ChevronRight, Target, Activity,
-  GraduationCap, BookOpen, Sparkles, Zap, Shield, Brain, MessageSquare
+import {
+  CheckCircle,
+  Loader2, ChevronRight, Activity,
+  GraduationCap, BookOpen, Zap, Shield, Brain, MessageSquare
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -35,14 +35,14 @@ export default function Dashboard() {
           fetch('/api/tasks'),
           fetch('/api/analytics/summary')
         ]);
-        
+
         const userData = await userRes.json();
         const tasksData = await taskRes.json();
         const analyticsData = await analyticsRes.json();
 
         const activeRoadmap = userData.user?.roadmaps.find((r: any) => r.status === 'ACTIVE');
         const pendingTasks = tasksData.tasks?.filter((t: any) => t.status === 'PENDING') || [];
-        
+
         setTasks(pendingTasks.slice(0, 4));
         setStats({
           activeSemester: activeRoadmap?.semesterNumber || 0,
@@ -51,7 +51,7 @@ export default function Dashboard() {
           careerProgress: userData.user?.careerProfile?.careerReadinessScore || 0,
           mockReadiness: analyticsData.latest?.mock || 0,
           latestMock: analyticsData.mockExams?.[0] || null,
-          insight: activeRoadmap 
+          insight: activeRoadmap
             ? `Everything looks good. You are in Semester ${activeRoadmap.semesterNumber}. You have ${pendingTasks.length} tasks to complete.`
             : "Welcome! Create your first study plan to get started."
         });
@@ -77,9 +77,9 @@ export default function Dashboard() {
 
   return (
     <div className="fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 4vh, 2rem)', position: 'relative' }}>
-      
+
       {/* --- COMMAND HEADER --- */}
-      <header className="bento-card neon-border" style={{ 
+      <header className="bento-card neon-border" style={{
         padding: 'clamp(1.25rem, 5vw, 2.5rem)',
         background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--accent-glow) 100%)',
         overflow: 'hidden',
@@ -95,7 +95,7 @@ export default function Dashboard() {
           <h1 style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)', fontWeight: 950, lineHeight: 1, letterSpacing: '-0.04em', margin: 0 }}>
             {greeting}, <br className="mobile-only" /><span className="shimmer-text">{user?.firstName?.toUpperCase() || 'STUDENT'}</span>
           </h1>
-          
+
           <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <Link href="/dashboard/roadmap" className="btn-primary" style={{ borderRadius: '12px', padding: '12px 20px', fontSize: '0.7rem', fontWeight: 900, flex: '1 1 140px', textAlign: 'center' }}>
               REVEAL STRATEGY
@@ -105,7 +105,7 @@ export default function Dashboard() {
             </Link>
           </div>
         </div>
-        
+
         <Shield size={200} color="var(--accent)" style={{ position: 'absolute', right: '-40px', bottom: '-40px', opacity: 0.05, pointerEvents: 'none' }} />
       </header>
 
@@ -119,8 +119,8 @@ export default function Dashboard() {
         ].map((s, i) => (
           <div key={i} className="glass-card telemetry-item" style={{ borderLeft: `3px solid ${s.color}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-               <span style={{ color: s.color }}>{s.icon}</span>
-               <span style={{ fontSize: '0.55rem', fontWeight: '900', color: 'var(--text-muted)', letterSpacing: '1px' }}>{s.label}</span>
+              <span style={{ color: s.color }}>{s.icon}</span>
+              <span style={{ fontSize: '0.55rem', fontWeight: '900', color: 'var(--text-muted)', letterSpacing: '1px' }}>{s.label}</span>
             </div>
             <h3 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', fontWeight: '950', margin: 0, lineHeight: 1 }}>{s.val}</h3>
           </div>
@@ -129,7 +129,7 @@ export default function Dashboard() {
 
       {/* --- MAIN INTERFACE --- */}
       <div className="stack-on-mobile" style={{ gap: '1.5rem' }}>
-        
+
         {/* Left Col: Insights & Progress */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 2 }}>
           <section className="glass-card" style={{ padding: 'clamp(1.25rem, 5vw, 2rem)', borderRadius: '24px' }}>
@@ -137,7 +137,7 @@ export default function Dashboard() {
               <Brain size={20} color="var(--accent-neon)" />
               <h2 style={{ fontSize: '0.85rem', fontWeight: '900', margin: 0, letterSpacing: '1px', color: 'var(--text-muted)' }}>NEURAL INSIGHTS</h2>
             </div>
-            
+
             <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', position: 'relative' }}>
               <p style={{ fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', lineHeight: 1.5, color: 'var(--text-primary)', margin: 0, fontWeight: 500 }}>
                 "{stats.insight}"
@@ -150,10 +150,10 @@ export default function Dashboard() {
                 <span style={{ color: 'var(--accent-neon)', fontWeight: '900', fontSize: '0.7rem' }}>{Math.round(stats.careerProgress)}%</span>
               </div>
               <div style={{ height: '6px', background: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden', border: '1px solid var(--border)' }}>
-                <div style={{ 
-                  width: `${stats.careerProgress}%`, 
-                  height: '100%', 
-                  background: 'var(--accent-gradient)', 
+                <div style={{
+                  width: `${stats.careerProgress}%`,
+                  height: '100%',
+                  background: 'var(--accent-gradient)',
                   boxShadow: '0 0 10px var(--accent-glow)'
                 }} />
               </div>
@@ -173,38 +173,38 @@ export default function Dashboard() {
           </section>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem' }}>
-             <Link href="/dashboard/assistant" className="glass-card glass-card-hoverable" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', borderRadius: '16px' }}>
-                <MessageSquare size={18} color="var(--accent-neon)" />
-                <span style={{ fontWeight: '800', fontSize: '0.75rem', letterSpacing: '0.5px' }}>AI CHAT</span>
-             </Link>
-             <Link href="/dashboard/syllabus" className="glass-card glass-card-hoverable" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', borderRadius: '16px' }}>
-                <BookOpen size={18} color="var(--accent-secondary)" />
-                <span style={{ fontWeight: '800', fontSize: '0.75rem', letterSpacing: '0.5px' }}>SYLLABUS</span>
-             </Link>
+            <Link href="/dashboard/assistant" className="glass-card glass-card-hoverable" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', borderRadius: '16px' }}>
+              <MessageSquare size={18} color="var(--accent-neon)" />
+              <span style={{ fontWeight: '800', fontSize: '0.75rem', letterSpacing: '0.5px' }}>AI CHAT</span>
+            </Link>
+            <Link href="/dashboard/syllabus" className="glass-card glass-card-hoverable" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', borderRadius: '16px' }}>
+              <BookOpen size={18} color="var(--accent-secondary)" />
+              <span style={{ fontWeight: '800', fontSize: '0.75rem', letterSpacing: '0.5px' }}>SYLLABUS</span>
+            </Link>
           </div>
         </div>
 
         {/* Right Col: Task Queue */}
         <aside className="glass-card" style={{ padding: '1.25rem', flex: 1, borderRadius: '24px', height: 'fit-content' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-             <h3 style={{ fontSize: '0.85rem', fontWeight: '900', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', letterSpacing: '1px' }}>
-                <Activity size={18} color="var(--warning)" /> TASK QUEUE
-             </h3>
+            <h3 style={{ fontSize: '0.85rem', fontWeight: '900', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', letterSpacing: '1px' }}>
+              <Activity size={18} color="var(--warning)" /> TASK QUEUE
+            </h3>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
             {tasks.length > 0 ? tasks.map((t, i) => (
               <div key={i} className="task-node">
-                <div style={{ 
-                  width: '5px', 
-                  height: '5px', 
-                  borderRadius: '50%', 
+                <div style={{
+                  width: '5px',
+                  height: '5px',
+                  borderRadius: '50%',
                   background: t.priority === 'HIGH' ? 'var(--danger)' : 'var(--accent-neon)',
                   flexShrink: 0
                 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                   <p style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>{t.title}</p>
-                   <p style={{ fontSize: '0.55rem', color: 'var(--text-muted)', letterSpacing: '0.5px', margin: 0 }}>{t.type} · {t.priority}</p>
+                  <p style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>{t.title}</p>
+                  <p style={{ fontSize: '0.55rem', color: 'var(--text-muted)', letterSpacing: '0.5px', margin: 0 }}>{t.type} · {t.priority}</p>
                 </div>
                 <ChevronRight size={10} opacity={0.3} />
               </div>

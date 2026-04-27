@@ -152,79 +152,84 @@ export default function RoadmapPage() {
 
   if (!userData?.roadmaps || userData.roadmaps.length === 0) {
     return (
-      <div style={{ maxWidth: '600px', margin: 'clamp(1rem, 5vh, 4rem) auto', padding: '1rem' }}>
-        <div className="glass-card" style={{ padding: 'clamp(1.5rem, 5vw, 3rem)', borderRadius: '32px', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', padding: 'clamp(1rem, 3vw, 1.5rem)', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
-            <MapIcon size={40} color="var(--accent)" />
-          </div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', margin: '0 0 1rem', lineHeight: 1.1 }}>Setup Your Roadmap</h1>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '0.9rem' }}>Define your goals and we'll generate a semester-by-semester plan using AI.</p>
+      <div style={{ maxWidth: '1000px', margin: 'clamp(1rem, 5vh, 4rem) auto', padding: '1rem' }}>
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'row', gap: '3rem', padding: 'clamp(1.5rem, 5vw, 3rem)', borderRadius: '32px', flexWrap: 'wrap', alignItems: 'center' }}>
           
-          <form onSubmit={(e) => handleGenerateRoadmap(e)} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left' }}>
-            <div className="responsive-grid-2" style={{ gap: '1rem' }}>
+          <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
+            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: 'clamp(1rem, 3vw, 1.5rem)', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
+              <MapIcon size={40} color="var(--accent)" />
+            </div>
+            <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', margin: '0 0 1rem', lineHeight: 1.1 }}>Setup Your Roadmap</h1>
+            <p style={{ color: 'var(--text-secondary)', margin: '0', fontSize: '1rem', lineHeight: 1.6 }}>Define your goals and we'll generate a personalized, semester-by-semester plan using AI to guide you towards your tech career.</p>
+          </div>
+
+          <div style={{ flex: '1 1 400px' }}>
+            <form onSubmit={(e) => handleGenerateRoadmap(e)} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left', background: 'var(--bg-primary)', padding: 'clamp(1.5rem, 3vw, 2rem)', borderRadius: '24px', border: '1px solid var(--border)' }}>
+              <div className="responsive-grid-2" style={{ gap: '1rem' }}>
+                <div>
+                  <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Target Course</label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    required
+                    placeholder="e.g. B.Tech CSE"
+                    value={setupData.targetCourse}
+                    onChange={e => setSetupData({ ...setupData, targetCourse: e.target.value })}
+                    style={{ marginBottom: 0 }}
+                  />
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Course Duration</label>
+                  <select className="input-field text-center" value={setupData.durationYears} onChange={e => setSetupData({ ...setupData, durationYears: Number(e.target.value) })} style={{ marginBottom: 0 }}>
+                    {[1, 2, 3, 4, 5].map(y => <option key={y} value={y}>{y} Year{y > 1 ? 's' : ''}</option>)}
+                  </select>
+                </div>
+              </div>
+
               <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Target Course</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Desired Tech Career Goal</label>
                 <input
                   type="text"
                   className="input-field"
                   required
-                  placeholder="e.g. B.Tech CSE"
-                  value={setupData.targetCourse}
-                  onChange={e => setSetupData({ ...setupData, targetCourse: e.target.value })}
+                  placeholder="e.g. Fullstack Developer"
+                  value={setupData.targetCareer}
+                  onChange={e => setSetupData({ ...setupData, targetCareer: e.target.value })}
                   style={{ marginBottom: 0 }}
                 />
               </div>
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Course Duration</label>
-                <select className="input-field text-center" value={setupData.durationYears} onChange={e => setSetupData({ ...setupData, durationYears: Number(e.target.value) })} style={{ marginBottom: 0 }}>
-                  {[1, 2, 3, 4, 5].map(y => <option key={y} value={y}>{y} Year{y > 1 ? 's' : ''}</option>)}
-                </select>
-              </div>
-            </div>
 
-            <div>
-              <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Desired Tech Career Goal</label>
-              <input
-                type="text"
-                className="input-field"
-                required
-                placeholder="e.g. Fullstack Developer"
-                value={setupData.targetCareer}
-                onChange={e => setSetupData({ ...setupData, targetCareer: e.target.value })}
-                style={{ marginBottom: 0 }}
-              />
-            </div>
-
-            <div className="responsive-grid-2" style={{ gap: '1rem' }}>
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Skill Level</label>
-                <select className="input-field" value={setupData.skillLevel} onChange={e => setSetupData({ ...setupData, skillLevel: e.target.value })} style={{ marginBottom: 0 }}>
-                  <option>Beginner</option>
-                  <option>Intermediate</option>
-                  <option>Advanced</option>
-                </select>
+              <div className="responsive-grid-2" style={{ gap: '1rem' }}>
+                <div>
+                  <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Skill Level</label>
+                  <select className="input-field" value={setupData.skillLevel} onChange={e => setSetupData({ ...setupData, skillLevel: e.target.value })} style={{ marginBottom: 0 }}>
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Study Hours / Week</label>
+                  <input
+                    type="number"
+                    className="input-field"
+                    min={1} max={168}
+                    value={setupData.availableHours}
+                    onChange={e => setSetupData({ ...setupData, availableHours: Number(e.target.value) })}
+                    style={{ marginBottom: 0 }}
+                  />
+                </div>
               </div>
-              <div>
-                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Study Hours / Week</label>
-                <input
-                  type="number"
-                  className="input-field"
-                  min={1} max={168}
-                  value={setupData.availableHours}
-                  onChange={e => setSetupData({ ...setupData, availableHours: Number(e.target.value) })}
-                  style={{ marginBottom: 0 }}
-                />
-              </div>
-            </div>
 
-            <button type="submit" disabled={generating} className="btn-primary" style={{ padding: '1rem', fontSize: '0.9rem', marginTop: '1rem', width: '100%' }}>
-              {generating ? (
-                <><Loader2 size={18} className="spin" style={{ marginRight: '8px' }} /> Architecting...</>
-              ) : (
-                <><Plus size={18} style={{ marginRight: '8px' }} /> Generate Roadmap</>
-              )}
-            </button>
-          </form>
+              <button type="submit" disabled={generating} className="btn-primary" style={{ padding: '1rem', fontSize: '0.9rem', marginTop: '1rem', width: '100%' }}>
+                {generating ? (
+                  <><Loader2 size={18} className="spin" style={{ marginRight: '8px' }} /> Architecting...</>
+                ) : (
+                  <><Plus size={18} style={{ marginRight: '8px' }} /> Generate Roadmap</>
+                )}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     );

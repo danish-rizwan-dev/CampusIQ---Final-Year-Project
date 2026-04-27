@@ -344,33 +344,34 @@ export default function CareerAssessmentPage() {
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(0.5rem, 3vw, 1rem) clamp(2rem, 10vh, 5rem)' }}>
       {step < 5 && (
-        <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 8vh, 4rem)' }}>
-          <div style={{ display: 'inline-flex', padding: 'clamp(1rem, 3vw, 1.5rem)', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
-            <Brain size={40} color="var(--accent)" />
-          </div>
-          <h1 className="gradient-text" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', margin: '0 0 0.5rem', lineHeight: 1.1 }}>Career Architect</h1>
-          <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: 'clamp(0.85rem, 1.2vw, 1rem)' }}>Navigate your future with precision. Our AI maps your trajectory.</p>
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'row', gap: '3rem', padding: 'clamp(1.5rem, 5vw, 3rem)', borderRadius: '32px', flexWrap: 'wrap', alignItems: 'center' }}>
           
-          {/* Progress Indicator */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>
-            {[1, 2, 3, 4].map(s => (
-              <div 
-                key={s} 
-                style={{ 
-                  flex: '0 1 60px', height: '6px', borderRadius: '3px', 
-                  background: s <= step ? 'var(--accent)' : 'var(--bg-secondary)',
-                  border: '1px solid var(--border)',
-                  transition: '0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-                }} 
-              />
-            ))}
+          <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
+            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: 'clamp(1rem, 3vw, 1.5rem)', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '1.5rem' }}>
+              <Brain size={40} color="var(--accent)" />
+            </div>
+            <h1 className="gradient-text" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', margin: '0 0 1rem', lineHeight: 1.1 }}>Career Architect</h1>
+            <p style={{ color: 'var(--text-secondary)', margin: '0 0 2rem', fontSize: '1rem', lineHeight: 1.6 }}>Navigate your future with precision. Our AI maps your trajectory based on your skills and passions.</p>
+            
+            {/* Progress Indicator */}
+            <div style={{ display: 'flex', gap: '8px', marginTop: '1rem' }}>
+              {[1, 2, 3, 4].map(s => (
+                <div 
+                  key={s} 
+                  style={{ 
+                    flex: '1 1 auto', height: '6px', borderRadius: '3px', 
+                    background: s <= step ? 'var(--accent)' : 'var(--bg-secondary)',
+                    border: '1px solid var(--border)',
+                    transition: '0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }} 
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
 
-      {step < 5 && (
-        <div className="glass-card" style={{ maxWidth: '600px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 2.5rem)', borderRadius: '24px' }}>
-          {renderStep()}
+          <div style={{ flex: '1 1 400px', background: 'var(--bg-primary)', padding: 'clamp(1.5rem, 3vw, 2rem)', borderRadius: '24px', border: '1px solid var(--border)' }}>
+            {renderStep()}
+          </div>
         </div>
       )}
 
