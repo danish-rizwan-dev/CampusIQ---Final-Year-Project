@@ -30,14 +30,14 @@ Respond purely in JSON format matching this schema:
       "week": number, 
       "month": number, 
       "focus": "string", 
-      "tasks": ["string (max 3 words)"], 
-      "details": "string (max 5 words)",
+      "tasks": ["string"], 
+      "details": "string",
       "youtubeSearchUrl": "string" 
     }
   ],
-  "aiSuggestions": ["string (max 10 words)"]
+  "aiSuggestions": ["string"]
 }
-Ensure EXACTLY 24 weeks for the breakdown. KEEP ALL TEXT EXTREMELY SHORT AND CONCISE to maximize generation speed.`;
+Ensure EXACTLY 24 weeks for the breakdown.`;
 
   try {
     const text = await getAIResponse(prompt);
@@ -73,10 +73,10 @@ Respond purely in JSON format matching this schema:
     "resources": [{"name": "string", "url": "string", "type": "Software" | "Documentation" | "Video"}],
     "books": [{"title": "string", "author": "string", "description": "string"}]
   },
-  "weeklyBreakdown": [{"week": number, "month": number, "focus": "string", "tasks": ["string (max 3 words)"], "details": "string (max 5 words)", "youtubeSearchUrl": "string"}],
-  "aiSuggestions": ["string (max 10 words)"]
+  "weeklyBreakdown": [{"week": number, "month": number, "focus": "string", "tasks": ["string"], "details": "string", "youtubeSearchUrl": "string"}],
+  "aiSuggestions": ["string"]
 }
-Ensure EXACTLY 24 weeks for the breakdown. KEEP ALL TEXT EXTREMELY SHORT AND CONCISE to maximize generation speed.`;
+Ensure EXACTLY 24 weeks for the breakdown.`;
 
   try {
     const text = await getAIResponse(prompt);

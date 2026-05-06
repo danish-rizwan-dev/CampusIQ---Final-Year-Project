@@ -16,25 +16,25 @@ Profile:
 - Location Preference: ${data.locationPreference}
 - Work Environment: ${data.workEnvironment} 
 
-Respond strictly in JSON matching this schema. KEEP ALL TEXT EXTREMELY CONCISE (max 5-10 words per string field) to maximize generation speed:
+Respond strictly in JSON matching this schema:
 {
   "recommendations": [
     {
       "title": "string",
       "confidence": number, // 0-100
-      "reasoning": "string (max 10 words)",
-      "skillGap": "string (max 10 words)",
+      "reasoning": "string",
+      "skillGap": "string",
       "details": {
-        "summary": "string (max 15 words)", 
+        "summary": "string", 
         "averageSalary": "string", // e.g. "₹12L - ₹25L"
         "topCountries": ["string"], 
         "jobVacanciesPerYear": "string", 
         "growthPotential": "string", 
-        "growthTrajectory": "string (max 10 words)",
+        "growthTrajectory": "string", // A 2-sentence outlook for next 5 years in India
         "perks": ["string"],
-        "whatToStudy": "string (max 10 words)",
-        "commonTools": ["string"],
-        "softSkills": ["string"],
+        "whatToStudy": "string", // Detailed guide on subjects, certificates, and focus areas
+        "commonTools": ["string"], // Industry tools (e.g. Docker, Figma, VS Code)
+        "softSkills": ["string"], // Social/Communication skills
         "careerLadder": [
           { "role": "string", "years": "string", "salary": "string" }
         ],
@@ -42,7 +42,7 @@ Respond strictly in JSON matching this schema. KEEP ALL TEXT EXTREMELY CONCISE (
           { "name": "string", "type": "string", "salaryRange": "string" }
         ],
         "globalMarket": [
-          { "country": "string", "demand": "string", "visaContext": "string" }
+          { "country": "string", "demand": "string", "visaContext": "string" } // e.g. { "country": "Germany", "demand": "High", "visaContext": "Blue Card" }
         ]
       }
     }
