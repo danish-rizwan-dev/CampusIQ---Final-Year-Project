@@ -107,12 +107,12 @@ export default function CareerAssessmentPage() {
             <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Tell us about your current educational journey to better align your career paths.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <div>
-                <label className="input-label">Academic Course / Degree</label>
+                <label className="input-label">Enter your Course / Degree</label>
                 <input 
                   type="text" 
                   className="input-field" 
                   required
-                  placeholder="e.g. BCA, B.Tech Computer Science, B.Sc IT"
+                  placeholder="Input your course (e.g. B.Tech CSE, BCA, B.Sc IT)"
                   value={formData.targetCourse}
                   onChange={e => setFormData({...formData, targetCourse: e.target.value})}
                 />
@@ -329,6 +329,7 @@ export default function CareerAssessmentPage() {
                 onClick={() => {
                   setStep(1);
                   setResults(null);
+                  setFormData(prev => ({ ...prev, targetCourse: '' }));
                 }} 
                 className="btn-secondary" 
                 style={{ padding: '1rem 2.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.75rem', borderRadius: '14px' }}
@@ -413,6 +414,7 @@ export default function CareerAssessmentPage() {
               onClick={() => {
                 setStep(1);
                 setResults(null);
+                setFormData(prev => ({ ...prev, targetCourse: '' }));
               }} 
               className="btn-secondary" 
               style={{ padding: '0.8rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.75rem', borderRadius: '12px', fontSize: '0.85rem', fontWeight: '800' }}

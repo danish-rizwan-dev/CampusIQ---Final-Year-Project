@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getAIResponse } from '@/lib/llm';
 
 export const runtime = 'nodejs';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 const ACCEPTED_TYPES: Record<string, string> = {
   'application/pdf': 'application/pdf',
@@ -48,18 +46,7 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const base64 = Buffer.from(arrayBuffer).toString('base64');
 
-    if (!process.env.GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY is not configured on the server.');
-    }
-
-    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
-
-    const result = await model.generateContent([
-      { inlineData: { data: base64, mimeType } },
-      OCR_PROMPT,
-    ]);
-
-    const text = result.response.text().trim();
+    const text = await getAIResponse(OCR_PROMPT, false, base64, mimeType);
 
     if (!text || text.length < 20) {
       return NextResponse.json(

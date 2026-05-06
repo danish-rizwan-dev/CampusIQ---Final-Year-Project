@@ -55,8 +55,9 @@ export default function RoadmapPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const target = params.get('target');
+    const course = params.get('course');
     
-    if (target && userData && !userData.roadmaps?.length && !generating && !isGeneratingRef.current) {
+    if (target && course && userData && !generating && !isGeneratingRef.current) {
       isGeneratingRef.current = true;
       // Clean up URL IMMEDIATELY to prevent double-triggering
       window.history.replaceState({}, '', '/dashboard/roadmap');

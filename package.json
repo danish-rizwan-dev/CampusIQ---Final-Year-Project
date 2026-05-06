@@ -19,6 +19,7 @@
     "@prisma/client": "^7.7.0",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.3",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.4.2",
     "lucide-react": "^0.473.0",
     "next": "16.2.3",

@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getAIResponse } from '@/lib/llm';
 import { auth } from '@clerk/nextjs/server';
-import prisma from '@/lib/prisma';
-
-const apiKey = process.env.GEMINI_API_KEY || '';
-const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function POST(req: Request) {
   try {
@@ -16,11 +12,6 @@ export async function POST(req: Request) {
     if (!text) {
       return NextResponse.json({ error: 'Missing syllabus text' }, { status: 400 });
     }
-
-    const model = genAI.getGenerativeModel({ 
-        model: "gemini-3-flash-preview",
-      generationConfig: { responseMimeType: "application/json" } 
-    });
 
     const prompt = `You are a Senior Academic Counselor and Technical Writer. Analyze this raw syllabus text and extract a structured study curriculum.
     For each topic, you MUST provide:
@@ -50,8 +41,8 @@ export async function POST(req: Request) {
       "subjectName": "string"
     }`;
 
-    const result = await model.generateContent(prompt);
-    const response = JSON.parse(result.response.text());
+    const aiResponse = await getAIResponse(prompt, true);
+    const response = JSON.parse(aiResponse);
 
     return NextResponse.json(response);
 

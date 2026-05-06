@@ -1,21 +1,6 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const apiKey = process.env.GEMINI_API_KEY || '';
-const genAI = new GoogleGenerativeAI(apiKey);
-
-// Optimized for your Pro Tier access
-const model = genAI.getGenerativeModel({
-  model: "gemini-3-flash-preview",
-  generationConfig: {
-    responseMimeType: "application/json",
-    temperature: 0.3
-  }
-});
+import { getAIResponse } from './llm';
 
 export async function generateInitialRoadmap(targetCareer: string, skillLevel: string, availableHours: number) {
-  if (!apiKey) {
-    return getMockInitialRoadmap();
-  }
 
   const prompt = `You are an expert AI academic advisor. Generate a DETAILED first semester study roadmap for a student aiming to be a ${targetCareer}. 
 A semester is 6 months (24 weeks). You MUST provide a comprehensive guide for each week.
@@ -45,29 +30,25 @@ Respond purely in JSON format matching this schema:
       "week": number, 
       "month": number, 
       "focus": "string", 
-      "tasks": ["string"], 
-      "details": "string",
+      "tasks": ["string (max 3 words)"], 
+      "details": "string (max 5 words)",
       "youtubeSearchUrl": "string" 
     }
   ],
-  "aiSuggestions": ["string"]
+  "aiSuggestions": ["string (max 10 words)"]
 }
-Ensure EXACTLY 24 weeks for the breakdown.`;
+Ensure EXACTLY 24 weeks for the breakdown. KEEP ALL TEXT EXTREMELY SHORT AND CONCISE to maximize generation speed.`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await getAIResponse(prompt);
     return JSON.parse(text);
   } catch (error) {
-    console.error("Gemini AI error:", error);
+    console.error("AI Generation error:", error);
     return getMockInitialRoadmap();
   }
 }
 
 export async function generateNextSemester(currentSemesterNum: number, score: number, previousSubjects: string[], previousWeaknesses: string[]) {
-  if (!apiKey) {
-    return getMockNextRoadmap(currentSemesterNum + 1);
-  }
 
   const prompt = `You are an expert AI academic advisor. The student just finished semester ${currentSemesterNum} with a performance score of ${score}/100.
 Generate a DETAILED curriculum for Semester ${currentSemesterNum + 1} (24 weeks / 6 months).
@@ -92,23 +73,21 @@ Respond purely in JSON format matching this schema:
     "resources": [{"name": "string", "url": "string", "type": "Software" | "Documentation" | "Video"}],
     "books": [{"title": "string", "author": "string", "description": "string"}]
   },
-  "weeklyBreakdown": [{"week": number, "month": number, "focus": "string", "tasks": ["string"], "details": "string", "youtubeSearchUrl": "string"}],
-  "aiSuggestions": ["string"]
+  "weeklyBreakdown": [{"week": number, "month": number, "focus": "string", "tasks": ["string (max 3 words)"], "details": "string (max 5 words)", "youtubeSearchUrl": "string"}],
+  "aiSuggestions": ["string (max 10 words)"]
 }
-Ensure EXACTLY 24 weeks for the breakdown.`;
+Ensure EXACTLY 24 weeks for the breakdown. KEEP ALL TEXT EXTREMELY SHORT AND CONCISE to maximize generation speed.`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await getAIResponse(prompt);
     return JSON.parse(text);
   } catch (error) {
-    console.error("Gemini AI error:", error);
+    console.error("AI Generation error:", error);
     return getMockNextRoadmap(currentSemesterNum + 1);
   }
 }
 
 export async function generateExamStrategy(examName: string, topics: string, targetDate: string) {
-  if (!apiKey) return null;
 
   const prompt = `You are an Exam Strategy AI. A student has an exam "${examName}" on ${targetDate}.
 Topics: ${topics}
@@ -122,8 +101,8 @@ Generate an exam preparation plan in JSON:
 Provide YouTube search links for every important topic and revision day focus.`;
 
   try {
-    const result = await model.generateContent(prompt);
-    return JSON.parse(result.response.text());
+    const text = await getAIResponse(prompt);
+    return JSON.parse(text);
   } catch (error) {
     console.error("Exam AI Error:", error);
     return null;
@@ -131,7 +110,6 @@ Provide YouTube search links for every important topic and revision day focus.`;
 }
 
 export async function generateMockExam(subject: string, syllabus: string) {
-  if (!apiKey) return null;
 
   const prompt = `You are an expert Professor. Generate a high-stakes 75-MARK MOCK EXAM for the subject: ${subject}.
 Syllabus Context: ${syllabus}
@@ -167,8 +145,8 @@ Respond ONLY in JSON matching this schema:
 }`;
 
   try {
-    const result = await model.generateContent(prompt);
-    return JSON.parse(result.response.text());
+    const text = await getAIResponse(prompt);
+    return JSON.parse(text);
   } catch (error) {
     console.error("Mock Exam AI Error:", error);
     return getMockExam(subject);
@@ -176,7 +154,6 @@ Respond ONLY in JSON matching this schema:
 }
 
 export async function gradeMockExam(examData: any, userAnswers: any) {
-  if (!apiKey) return null;
 
   const prompt = `You are an expert Professor grading an exam.
 EXAM DATA: ${JSON.stringify(examData)}
@@ -203,8 +180,8 @@ Respond ONLY in JSON matching this schema:
 }`;
 
   try {
-    const result = await model.generateContent(prompt);
-    return JSON.parse(result.response.text());
+    const text = await getAIResponse(prompt);
+    return JSON.parse(text);
   } catch (error) {
     console.error("Mock Exam Grading Error (Falling back to local grading):", error);
     return getMockGrading(examData, userAnswers);

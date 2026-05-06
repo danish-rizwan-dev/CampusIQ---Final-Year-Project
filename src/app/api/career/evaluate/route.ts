@@ -1,27 +1,11 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getAIResponse } from '@/lib/llm';
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
-
-const apiKey = process.env.GEMINI_API_KEY || '';
-const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-
-    if (!apiKey) {
-      // Mock Data if no API key
-      return NextResponse.json({
-        recommendations: [
-          { title: "Software Engineer", confidence: 95, reasoning: "Matches your analytical interests.", skillGap: "Need advanced algorithms." },
-          { title: "Data Scientist", confidence: 85, reasoning: "Strong problem solving overlap.", skillGap: "Need Python & Statistics." },
-          { title: "Product Manager", confidence: 70, reasoning: "Good for balancing technical and lifestyle.", skillGap: "Need leadership experience." }
-        ]
-      });
-    }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview", generationConfig: { responseMimeType: "application/json" } });
 
     const prompt = `You are a Career Guidance AI specialized in the Indian tech market. Analyze a student profile and return the top 3 career recommendations with deep, localized insights.
 Profile:
@@ -32,25 +16,25 @@ Profile:
 - Location Preference: ${data.locationPreference}
 - Work Environment: ${data.workEnvironment} 
 
-Respond strictly in JSON matching this schema:
+Respond strictly in JSON matching this schema. KEEP ALL TEXT EXTREMELY CONCISE (max 5-10 words per string field) to maximize generation speed:
 {
   "recommendations": [
     {
       "title": "string",
       "confidence": number, // 0-100
-      "reasoning": "string",
-      "skillGap": "string",
+      "reasoning": "string (max 10 words)",
+      "skillGap": "string (max 10 words)",
       "details": {
-        "summary": "string", 
+        "summary": "string (max 15 words)", 
         "averageSalary": "string", // e.g. "₹12L - ₹25L"
         "topCountries": ["string"], 
         "jobVacanciesPerYear": "string", 
         "growthPotential": "string", 
-        "growthTrajectory": "string", // A 2-sentence outlook for next 5 years in India
+        "growthTrajectory": "string (max 10 words)",
         "perks": ["string"],
-        "whatToStudy": "string", // Detailed guide on subjects, certificates, and focus areas
-        "commonTools": ["string"], // Industry tools (e.g. Docker, Figma, VS Code)
-        "softSkills": ["string"], // Social/Communication skills
+        "whatToStudy": "string (max 10 words)",
+        "commonTools": ["string"],
+        "softSkills": ["string"],
         "careerLadder": [
           { "role": "string", "years": "string", "salary": "string" }
         ],
@@ -58,21 +42,31 @@ Respond strictly in JSON matching this schema:
           { "name": "string", "type": "string", "salaryRange": "string" }
         ],
         "globalMarket": [
-          { "country": "string", "demand": "string", "visaContext": "string" } // e.g. { "country": "Germany", "demand": "High", "visaContext": "Blue Card" }
+          { "country": "string", "demand": "string", "visaContext": "string" }
         ]
       }
     }
   ]
 }`;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    const parsed = JSON.parse(text);
+    const aiResponse = await getAIResponse(prompt, true);
+    const parsed = JSON.parse(aiResponse);
 
     const { userId: clerkId } = await auth();
     if (clerkId) {
       const user = await prisma.user.findUnique({ where: { clerkId } });
       if (user) {
+        // Save the new target course so it stops defaulting to old values
+        if (data.targetCourse || data.durationYears) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              targetCourse: data.targetCourse || user.targetCourse,
+              durationYears: data.durationYears ? Number(data.durationYears) : user.durationYears
+            }
+          });
+        }
+
         await prisma.careerProfile.upsert({
           where: { userId: user.id },
           update: { 

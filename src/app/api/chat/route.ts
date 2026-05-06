@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getAIResponse } from '@/lib/llm';
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export async function POST(req: Request) {
   try {
@@ -28,16 +26,12 @@ export async function POST(req: Request) {
     // GREETING / ONE-WORD FAST REPLY
     // ---------------------------
     if (isGreeting || wordCount === 1) {
-      const quickModel = genAI.getGenerativeModel({
-        model: "gemini-3-flash-preview"
-      });
-
       const prompt = isGreeting
         ? `Reply with a single short friendly greeting. Max 10 words. Plain text only. No emojis.`
         : `Give a one-line plain-text definition of "${lastMessage}". No formatting. No symbols.`;
 
-      const result = await quickModel.generateContent(prompt);
-      return NextResponse.json({ reply: result.response.text().trim() });
+      const reply = await getAIResponse(prompt, false);
+      return NextResponse.json({ reply: reply.trim() });
     }
 
     // ---------------------------
@@ -81,22 +75,17 @@ RULES:
 - Topic context: ${topic}
 `;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
+    const finalPrompt = `
+SYSTEM PROMPT:
+${systemPrompt}
 
-    const chat = model.startChat({
-      systemInstruction: {
-        role: 'system',
-        parts: [{ text: systemPrompt }],
-      },
-    });
-
-    const finalPrompt =
-      mode === 'short'
+USER MESSAGE:
+${mode === 'short'
         ? `Answer briefly in 2-4 sentences:\n${lastMessage}`
-        : `Give a full structured explanation:\n${lastMessage}`;
+        : `Give a full structured explanation:\n${lastMessage}`}
+`;
 
-    const result = await chat.sendMessage(finalPrompt);
-    const reply = result.response.text().trim();
+    const reply = await getAIResponse(finalPrompt, false);
 
     // ---------------------------
     // SAVE TO DB
